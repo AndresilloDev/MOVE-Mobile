@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import ConfirmarCuentaScreen from './Screens/ChangePasswordRecoverScreen'; 
 import NotificationsPage from './Screens/NotificationsPage'; 
 import ClassroomsPage from './Screens/ClassroomsPage'; 
+import "./global.css";
 
 const Stack = createNativeStackNavigator();
 

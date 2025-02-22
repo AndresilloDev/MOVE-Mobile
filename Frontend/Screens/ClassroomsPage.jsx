@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, StyleSheet } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -15,61 +15,61 @@ const ClassroomsPage = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 relative">
       <Image
         source={require("../assets/fondo.jpg")}
-        style={styles.backgroundImage}
+        className="absolute w-full h-full opacity-30"
         resizeMode="cover"
       />
 
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.header}>
+      <ScrollView className="flex-1">
+        <View className="h-16 flex-row items-center px-4 border-b border-gray-300">
           <Image
             source={require("../assets/logo.png")}
-            style={styles.logo}
+            className="w-[40px] h-[40px]" 
             resizeMode="contain"
           />
         </View>
 
-        <View style={styles.searchSection}>
-          <View style={styles.homeContainer}>
+        <View className="p-4">
+          <View className="flex-row items-center ml-2.5 mb-6">
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-              <Icon name="home" style={styles.homeIcon} />
+              <Icon name="home" size={25} color="#000" /> 
             </TouchableOpacity>
-            <Text style={styles.title}>Docencias - D4</Text>
+            <Text className="text-xl ml-2.5">Docencias - D4</Text>
           </View>
-          <View style={styles.searchContainer}>
+          <View className="flex-row items-center bg-white rounded-lg px-2.5">
             <TextInput
-              style={styles.searchInput}
+              className="flex-1 py-2 px-2.5"
               placeholder="Buscar..."
             />
             <TouchableOpacity
-              style={styles.searchButton}
+              className="bg-[#DEFF35] rounded-lg p-2.5"
               onPress={() => console.log("Buscar")}
             >
-              <Icon name="search" style={styles.searchIcon} />
+              <Icon name="search" size={20} color="#000" /> 
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.classroomsContainer}>
+        <View className="px-4">
           {classrooms.map((classroom, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.classroomCard}
+              className="mb-4 p-4 bg-white rounded-lg shadow-sm shadow-black"
               onPress={() => navigation.navigate("ClassroomDetails", { classroom })}
             >
-              <View style={styles.classroomContent}>
+              <View className="flex-row justify-between items-center">
                 <View>
-                  <Text style={styles.classroomName}>Nombre: {classroom.id}</Text>
-                  <Text style={styles.classroomDevices}>Dispositivos registrados: {classroom.devices}</Text>
+                  <Text className="text-lg font-bold text-gray-800">Nombre: {classroom.id}</Text>
+                  <Text className="text-base text-gray-600 mt-2">Dispositivos registrados: {classroom.devices}</Text>
                 </View>
-                <View style={styles.actionsContainer}>
-                  <TouchableOpacity onPress={() => console.log("Editar")} style={styles.actionButton}>
-                    <Icon name="create" style={styles.actionIcon} />
+                <View className="flex-row">
+                  <TouchableOpacity onPress={() => console.log("Editar")} className="mr-2.5">
+                    <Icon name="create" size={24} color="#000" />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => console.log("Eliminar")}>
-                    <Icon name="trash" style={styles.actionIcon} />
+                    <Icon name="trash" size={24} color="#000" /> 
                   </TouchableOpacity>
                 </View>
               </View>
@@ -79,139 +79,15 @@ const ClassroomsPage = () => {
       </ScrollView>
 
       <TouchableOpacity
-        style={styles.addButton}
+        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
         onPress={() => navigation.navigate("AddDevice")}
       >
-        <Icon name="add" style={styles.addIcon} />
+        <Icon name="add" size={30} color="#000" /> 
       </TouchableOpacity>
 
       <StatusBar style="dark" />
     </View>
   );
 };
-
-// csss
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    position: 'relative',
-  },
-  backgroundImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    opacity: 0.3,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  header: {
-    height: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D9D9D9',
-  },
-  logo: {
-    width: 60,
-    height: 60,
-  },
-  searchSection: {
-    padding: 16,
-  },
-  homeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginBottom: 25,
-  },
-  homeIcon: {
-    fontSize: 25,
-    color: '#000',
-  },
-  title: {
-    fontSize: 20,
-    marginLeft: 10,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-  },
-  searchInput: {
-    flex: 1,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-  },
-  searchButton: {
-    backgroundColor: '#DEFF35',
-    borderRadius: 10,
-    padding: 10,
-  },
-  searchIcon: {
-    fontSize: 20,
-    color: '#000',
-  },
-  classroomsContainer: {
-    paddingHorizontal: 16,
-  },
-  classroomCard: {
-    marginBottom: 16,
-    padding: 16,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  classroomContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  classroomName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  classroomDevices: {
-    fontSize: 16,
-    color: '#666',
-    marginTop: 8,
-  },
-  actionsContainer: {
-    flexDirection: 'row',
-  },
-  actionButton: {
-    marginRight: 10,
-  },
-  actionIcon: {
-    fontSize: 24,
-    color: '#000',
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: 'rgba(222, 255, 53, 0.8)',
-    borderRadius: 50,
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
-  addIcon: {
-    fontSize: 30,
-    color: '#000',
-  },
-});
 
 export default ClassroomsPage;
