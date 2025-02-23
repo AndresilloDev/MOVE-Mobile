@@ -4,21 +4,40 @@ import StackNavigatorBuildings from "./StackNavigatorBuildings";
 import AdminsScreen from "../screens/AdminsScreen";
 import StackNavigatorNotifications from "./StackNavigatorNotifications";
 import StackNavigatorDevices from "./StackNavigatorDevices";
-import { Image, SafeAreaView, Text, View } from "react-native";
+import { Alert, Image, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
-export default function BottomTabNavigator() {
+export default function BottomTabNavigator({setIsAuthenticated}) {
+  const handleLogout = () => {
+    Alert.alert(
+      "Cerrar sesión",
+      "¿Estás seguro que deseas cerrar sesión?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { text: "Cerrar sesión", onPress: () => setIsAuthenticated(false) },
+      ]
+    );
+  };
+
     return (
         <Tab.Navigator
-            screenOptions={ ({ route }) => ({
+            screenOptions={ () => ({
                 header: () => (
                     <SafeAreaView className="bg-white">
-                        <View className="h-14 bg-white flex justify-end items-center shadow-md">
+                        <View className="h-12 bg-white flex justify-between items-center shadow-md flex-row">
                             <Image
                                 source={require("../assets/logo.png")}
-                                className="w-32 h-12"
+                                className="w-32 h-10"
                             />
+							<TouchableOpacity onPress={handleLogout}>
+								<Image
+								source={require("../assets/icons/profile.png")}
+								className="w-8 h-8 mr-4"
+								onPress={handleLogout}
+								/>
+							</TouchableOpacity>
                         </View>
                     </SafeAreaView>
                 ),
