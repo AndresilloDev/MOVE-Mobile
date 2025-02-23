@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const NotificationsPage = () => {
+const NotificationsScreen = () => {
   const navigation = useNavigation();
 
   const notifications = [
@@ -70,4 +70,4 @@ const NotificationsPage = () => {
   );
 };
 
-export default NotificationsPage;
+export default NotificationsScreen;

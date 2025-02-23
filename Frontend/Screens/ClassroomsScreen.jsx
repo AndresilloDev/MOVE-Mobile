@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const ClassroomsPage = () => {
+const ClassroomsScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -88,4 +88,4 @@ const ClassroomsPage = () => {
   );
 };
 
-export default ClassroomsPage;
+export default ClassroomsScreen;
