@@ -1,56 +1,36 @@
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
 
 const ChangePasswordRecoverScreen = () => {
-    const navigation = useNavigation();
+    const [code, setCode] = useState(["", "", "", "", ""]);
 
     return (
-        <View style={{ flex: 1, position: 'relative' }}>
-            <Image
-                source={require("../assets/fondo.jpg")}
-                style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.3 }}
-                resizeMode="cover"
+        <View className="flex-1">
+            <ImageBackground
+                source={require('../assets/fondo.jpg')}
+                className="flex-1"
+                style={{ opacity: 0.5 }}
             />
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 16 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20, color: '#000000' }}>
-                    Confirmar tu cuenta
-                </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', marginBottom: 20 }}>
-                    {[...Array(5)].map((_, index) => (
+            <View className="absolute inset-0 justify-center items-center bg-white bg-opacity-70 p-4 rounded-lg"> {/* Fondo blanco con opacidad */}
+                <Text className="text-xl font-bold mb-6 text-center text-black">Confirmar tu cuenta</Text>
+                <View className="flex-row justify-between mb-6">
+                    {code.map((digit, index) => (
                         <TextInput
                             key={index}
-                            style={{
-                                width: 50,
-                                height: 50,
-                                borderWidth: 1,
-                                borderColor: 'black',
-                                textAlign: 'center',
-                                fontSize: 24,
-                                marginHorizontal: 5,
-                                borderRadius: 10,
-                                backgroundColor: 'white',
-                            }}
+                            className="border border-light-gray rounded-lg w-12 h-12 text-center mx-1" // Espaciado horizontal entre cuadros
                             maxLength={1}
                             keyboardType="numeric"
+                            value={digit}
+                            onChangeText={(text) => {
+                                const newCode = [...code];
+                                newCode[index] = text;
+                                setCode(newCode);
+                            }}
                         />
                     ))}
                 </View>
-                <TouchableOpacity
-                    style={{
-                        backgroundColor: '#DEFF35',
-                        borderWidth: 1,
-                        borderColor: 'black',
-                        borderRadius: 10,
-                        width: 180,
-                        paddingVertical: 12,
-                        alignItems: 'center',
-                    }}
-                    onPress={() => navigation.navigate("NextScreen")}
-                >
-                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 16 }}>
-                        Confirmar
-                    </Text>
+                <TouchableOpacity className="bg-[#DEFF35] border border-black rounded-lg w-32 py-2">
+                    <Text className="text-center text-black font-bold">Confirmar</Text>
                 </TouchableOpacity>
             </View>
         </View>
