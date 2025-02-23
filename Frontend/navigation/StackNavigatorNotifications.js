@@ -8,8 +8,10 @@ const Stack = createNativeStackNavigator();
 export default function StackNavigatorNotifications() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Notifications" component={NotificationsScreen} />
-      <Stack.Screen name="ArchivedNotifications" component={ArchivedNotifications} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} 
+        options={{headerShown : false}} />
+      <Stack.Screen name="ArchivedNotifications" component={ArchivedNotifications} 
+        options={{headerShown : false}} />
     </Stack.Navigator>
   );
 }

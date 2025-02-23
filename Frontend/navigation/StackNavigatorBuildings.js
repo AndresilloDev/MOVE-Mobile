@@ -8,8 +8,10 @@ const Stack = createNativeStackNavigator();
 export default function StackNavigatorBuildings() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Buildings" component={BuildingsScreen} />
-      <Stack.Screen name="Classrooms" component={ClassroomsScreen} />
+      <Stack.Screen name="Buildings" component={BuildingsScreen} 
+        options={{headerShown : false}} />
+      <Stack.Screen name="Classrooms" component={ClassroomsScreen} 
+        options={{headerShown : false}} />
     </Stack.Navigator>
   );
 }

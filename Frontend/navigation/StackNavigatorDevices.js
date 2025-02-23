@@ -8,8 +8,14 @@ const Stack = createNativeStackNavigator();
 export default function StackNavigatorDevices() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Devices" component={DevicesScreen} />
-      <Stack.Screen name="SelectedDevice" component={SelectedDeviceScreen} />
+      <Stack.Screen 
+        name="Devices" 
+        component={DevicesScreen} 
+        options={{headerShown : false}} />
+      <Stack.Screen 
+        name="SelectedDevice" 
+        component={SelectedDeviceScreen} 
+        options={{headerShown : false}} />
     </Stack.Navigator>
   );
 }
