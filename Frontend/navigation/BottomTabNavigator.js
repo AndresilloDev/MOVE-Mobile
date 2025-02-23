@@ -29,7 +29,7 @@ export default function BottomTabNavigator({}) {
                         <View className="h-12 bg-white flex justify-between items-center shadow-md flex-row">
                             <Image
                                 source={require("../assets/logo.png")}
-                                className="w-32 h-10"
+                                className="w-32 h-10 ml-4"
                             />
 							<TouchableOpacity onPress={handleLogout}>
 								<Image
