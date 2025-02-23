@@ -9,9 +9,12 @@ const UsersScreen = () => {
     const [expandedUserId, setExpandedUserId] = useState(null);
 
     const users = [
-        { id: 1, username: "usuario1", name: "Nombre1", surname: "Apellido1" },
-        { id: 2, username: "usuario2", name: "Nombre2", surname: "Apellido2" },
-        { id: 3, username: "usuario3", name: "Nombre3", surname: "Apellido3" },
+        { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
+        { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
+        { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
+        { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
+        { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
+        { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
     ];
 
     const toggleExpand = (id) => {
@@ -20,14 +23,6 @@ const UsersScreen = () => {
 
     return (
         <View className="flex-1 bg-gray-50">
-            <View className="flex-row items-center p-4 border-b border-gray-300">
-                <Image
-                    source={require("../assets/logo.png")}
-                    className="w-15 h-15"
-                    resizeMode="contain"
-                />
-            </View>
-
             <View className="p-4 items-center">
                 <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
                     <TextInput
