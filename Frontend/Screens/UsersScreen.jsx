@@ -36,7 +36,7 @@ const UsersScreen = () => {
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />
-                        <TouchableOpacity className="bg-yellow-400 w-10 h-full justify-center items-center rounded-r-xl">
+                        <TouchableOpacity className="bg-[rgba(222,255,53,0.8)] w-10 h-full justify-center items-center rounded-r-xl">
                             <Ionicons name="search" size={20} color="black" />
                         </TouchableOpacity>
                     </View>
@@ -79,7 +79,7 @@ const UsersScreen = () => {
                 />
 
                 <TouchableOpacity
-                    className="bg-yellow-400 border border-black rounded-xl w-2/5 py-2 items-center self-end mb-4"
+                    className="bg-[rgba(222,255,53,0.8)] border border-black rounded-xl w-2/5 py-2 items-center self-end mb-4"
                     onPress={() => navigation.navigate("AddAdminScreen")}
                 >
                     <Text className="font-bold text-lg text-center">Agregar administrador</Text>
@@ -94,7 +94,7 @@ const UsersScreen = () => {
                         <Ionicons name="book" size={24} color="black" />
                         <Text>Docencias</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="bg-yellow-400 rounded-md p-1">
+                    <TouchableOpacity className="bg-[rgba(222,255,53,0.8)] rounded-md p-1">
                         <Ionicons name="person" size={24} color="black" />
                         <Text className="font-bold">Administradores</Text>
                     </TouchableOpacity>
