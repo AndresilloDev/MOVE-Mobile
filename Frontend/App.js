@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import BottomTabNavigator from './navigation/BottomTabNavigator';
 import "./global.css";
-import HomeScreen from './screens/HomeScreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { AuthProvider } from './context/AuthContext';
+import MainNavigator from './navigation/AppNavigator';
 
 export default function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     return (
-      <NavigationContainer>
-        {!isAuthenticated ? <HomeScreen setIsAuthenticated={setIsAuthenticated} /> :
-        <BottomTabNavigator setIsAuthenticated={setIsAuthenticated} />}
-      </NavigationContainer>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <AuthProvider>
+          <MainNavigator />
+        </AuthProvider>
+      </GestureHandlerRootView>
     );
   }
