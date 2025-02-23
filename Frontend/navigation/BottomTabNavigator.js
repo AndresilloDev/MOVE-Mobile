@@ -9,14 +9,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
-export default function BottomTabNavigator({setIsAuthenticated}) {
+export default function BottomTabNavigator({}) {
   const handleLogout = () => {
     Alert.alert(
       "Cerrar sesión",
       "¿Estás seguro que deseas cerrar sesión?",
       [
         { text: "Cancelar", style: "cancel" },
-        { text: "Cerrar sesión", onPress: () => setIsAuthenticated(false) },
+        { text: "Cerrar sesión", onPress: () => console.log("Cerrar sesión") },
       ]
     );
   };
@@ -35,7 +35,6 @@ export default function BottomTabNavigator({setIsAuthenticated}) {
 								<Image
 								source={require("../assets/icons/profile.png")}
 								className="w-8 h-8 mr-4"
-								onPress={handleLogout}
 								/>
 							</TouchableOpacity>
                         </View>
