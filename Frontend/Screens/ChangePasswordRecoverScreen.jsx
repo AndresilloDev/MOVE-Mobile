@@ -12,13 +12,6 @@ const ChangePasswordRecoverScreen = () => {
                 style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0.3 }}
                 resizeMode="cover"
             />
-            <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#D9D9D9' }}>
-                <Image
-                    source={require("../assets/logo.png")}
-                    style={{ width: 60, height: 60 }}
-                    resizeMode="contain"
-                />
-            </View>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 16 }}>
                 <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20, color: '#000000' }}>
                     Confirmar tu cuenta

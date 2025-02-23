@@ -27,13 +27,13 @@ export default function App() {
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen
-                    name="Classrooms"
-                    component={ClassroomsPage}
+                    name="Users Page"
+                    component={UserPage}
                     options={screenOptions}
                 />
                 <Stack.Screen
-                    name="Users Page"
-                    component={UserPage}
+                    name="Classrooms"
+                    component={ClassroomsPage}
                     options={screenOptions}
                 />
                 <Stack.Screen
