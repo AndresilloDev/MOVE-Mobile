@@ -27,6 +27,11 @@ export default function App() {
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen
+                    name="Notificaciones"
+                    component={NotificationsPage}
+                    options={screenOptions}
+                />
+                <Stack.Screen
                     name="ConfirmarCuenta"
                     component={ConfirmarCuentaScreen}
                     options={screenOptions}
@@ -39,11 +44,6 @@ export default function App() {
                 <Stack.Screen
                     name="Classrooms"
                     component={ClassroomsPage}
-                    options={screenOptions}
-                />
-                <Stack.Screen
-                    name="Notifications"
-                    component={NotificationsPage}
                     options={screenOptions}
                 />
             </Stack.Navigator>
