@@ -6,6 +6,7 @@ import StackNavigatorNotifications from "./StackNavigatorNotifications";
 import StackNavigatorDevices from "./StackNavigatorDevices";
 import { Alert, Image, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import UsersScreen from "../screens/UsersScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -68,7 +69,7 @@ export default function BottomTabNavigator({}) {
               }} />
             <Tab.Screen 
               name="Admins" 
-              component={AdminsScreen} 
+              component={UsersScreen} 
               options={{
                 tabBarIcon: () => (
                     <Image
