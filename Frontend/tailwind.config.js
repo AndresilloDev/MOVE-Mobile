@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  // NOTE: Update this to include the paths to all of your component files.
   content: [
     "./app/**/*.{js,jsx,ts,tsx}", 
     "./App.js", 
@@ -15,10 +14,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#f0f4f8',
-        primary: '#DEFF35',
+        header: '#FFFFFF',
+        lines: '#D9D9D9',
+        action: {
+          primary: '#DEFF35',
+          hover: '#B4CF2D',
+        },
+        text: {
+          primary: '#000000',
+          secondary: '#D9D9D9',
+        }
       },
     },
   },
   plugins: [],
-}
+};
