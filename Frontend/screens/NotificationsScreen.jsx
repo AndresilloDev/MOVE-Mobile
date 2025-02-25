@@ -40,11 +40,6 @@ const NotificationsScreen = () => {
             >
               <View className="flex-row justify-between items-center mb-2">
                 <Text className="text-lg font-bold text-gray-800">{notification.sensor}</Text>
-                <TouchableOpacity
-                  onPress={() => console.log("Cerrar notificación", notification.id)}
-                >
-                  <Icon name="close-circle" size={24} color="#000" /> 
-                </TouchableOpacity>
               </View>
 
               <Text className="text-base text-gray-600">{notification.message}</Text>
