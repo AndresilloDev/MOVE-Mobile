@@ -10,8 +10,9 @@ const LoginScreen = ( {navigation} ) => {
   return (
     <View className="flex-1 justify-center items-center bg-gray-100">
           <Image
-            source={require("../assets/fondo.jpg")} 
-            className="absolute w-full h-full opacity-30" 
+            source={require("../assets/bg.png")} 
+            className="absolute top-0 left-0 w-fill h-full" 
+            style={{ width: "600%", height: "100%"}}
             resizeMode="cover" 
           />
       <Text className="text-2xl font-bold mb-5">Inicia sesión en MOVE</Text>
@@ -27,14 +28,15 @@ const LoginScreen = ( {navigation} ) => {
         secureTextEntry
         onChangeText={setPassword}
       />
-      <Text className="w-4/5 text-right text-sm text-blue-500 mb-4" onPress={() => navigation.navigate("ForgotPassword")}>
+      <Text className="w-4/5 text-right text-sm mb-4" onPress={() => navigation.navigate("ForgotPassword")}>
         Olvidaste tu contraseña?
       </Text>
       <TouchableOpacity
-        className="bg-primary p-3 rounded-lg mt-3 w-4/5 items-center"
+        className="bg-primary p-2 rounded-lg mt-3 w-4/5 items-center"
+        style={{ borderColor: "#BBD04E" }}
         onPress={() => login(username, password)}
       >
-        <Text className="text-white text-lg font-bold">Iniciar Sesión</Text>
+        <Text className="text-lg">Iniciar Sesión</Text>
       </TouchableOpacity>
     </View>
   );
