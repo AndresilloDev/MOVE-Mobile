@@ -34,6 +34,7 @@ const NotificationsScreen = () => {
 
         <View className="px-4">
           {notifications.map((notification, index) => (
+              <TouchableOpacity onPress={() => navigation.navigate("SelectedNotification")}>
             <View
               key={index}
               className="mb-4 p-4 bg-white rounded-lg shadow-sm shadow-black"
@@ -49,8 +50,11 @@ const NotificationsScreen = () => {
                 <Text className="text-sm text-gray-500">{notification.date}</Text>
               </View>
             </View>
+              </TouchableOpacity>
+
           ))}
         </View>
+
       </ScrollView>
 
       <TouchableOpacity 
