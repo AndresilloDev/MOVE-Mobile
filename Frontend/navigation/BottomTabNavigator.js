@@ -24,26 +24,9 @@ export default function BottomTabNavigator({}) {
 
     return (
         <Tab.Navigator
-            screenOptions={ () => ({
-                header: () => (
-                    <SafeAreaView className="bg-white">
-                        <View className="h-12 bg-white flex justify-between items-center shadow-md flex-row">
-                            <Image
-                                source={require("../assets/logo.png")}
-                                className="w-32 h-10 ml-4"
-                            />
-							<TouchableOpacity onPress={handleLogout}>
-								<Image
-								source={require("../assets/icons/profile.png")}
-								className="w-8 h-8 mr-4"
-								/>
-							</TouchableOpacity>
-                        </View>
-                    </SafeAreaView>
-                ),
-                tabBarStyle: { height: 60 },
-                tabBarLabelStyle: { fontSize: 12 },
-            })}
+        screenOptions={{
+          headerShown: false,
+        }}
         >
             <Tab.Screen 
               name="Devices" 

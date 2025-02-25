@@ -13,21 +13,12 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-                  screenOptions={ () => ({
-                      header: () => (
-                          <SafeAreaView className="bg-white">
-                              <View className="h-12 bg-white flex justify-between items-center shadow-md flex-row">
-                                  <Image
-                                      source={require("../assets/logo.png")}
-                                      className="w-32 h-10"
-                                  />
-                              </View>
-                          </SafeAreaView>
-                      ),
-                      headerShown: false,
-                  })}>
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         {user ? (
-            <Stack.Screen name="User" component={BottomTabNavigator} />
+          <Stack.Screen name="User" component={BottomTabNavigator} />
         ) : (
           <Stack.Screen name="NoUser" component={StackNavigatorHome} />
         )}
