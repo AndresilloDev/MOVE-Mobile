@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const ArchivedNotifications = () => {
+const ArchivedNotifications = ({}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedNotificationId, setSelectedNotificationId] = useState(null);
@@ -41,7 +41,7 @@ const ArchivedNotifications = () => {
       <ScrollView className="flex-1">
         <View className="p-4">
           <View className="flex-row items-center ml-2.5 mb-6">
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Icon name="home" size={25} color="#000" />
             </TouchableOpacity>
             <Text className="text-xl ml-2.5">Notificaciones Archivadas</Text>

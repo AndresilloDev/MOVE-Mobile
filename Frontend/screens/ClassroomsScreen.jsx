@@ -1,84 +1,118 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  TextInput,
+  Alert,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
+import Header from "../components/Header";
+
+const classrooms = [
+  { id: "CC11", devices: 1 },
+  { id: "CC12", devices: 2 },
+  { id: "CC13", devices: 1 },
+  { id: "CC14", devices: 1 },
+];
+
+const ClassroomCard = ({ classroom, navigation, onEdit, onDelete }) => (
+  <TouchableOpacity
+    className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
+    onPress={() => navigation.navigate("ClassroomDetails", { classroom })}
+  >
+    <View>
+      <Text className="font-bold mb-2">Aula: {classroom.id}</Text>
+      <Text>Dispositivos registrados: {classroom.devices}</Text>
+    </View>
+    <View className="flex flex-row space-x-2 items-end">
+      <TouchableOpacity onPress={() => onEdit(classroom)}>
+        <Icon name="create-outline" size={24} color="#4CAF50" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => onDelete(classroom)}>
+        <Icon name="trash-outline" size={24} color="#F44336" />
+      </TouchableOpacity>
+    </View>
+  </TouchableOpacity>
+);
 
 const ClassroomsScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const classrooms = [
-    { id: 'CC11', devices: 8 },
-    { id: 'CC12', devices: 8 },
-    { id: 'CC13', devices: 8 },
-    { id: 'CC14', devices: 8 },
-  ];
+  const filteredClassrooms = classrooms.filter((classroom) =>
+    classroom.id.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleEdit = (classroom) => {
+    Alert.alert("Editar", `Editar información del aula ${classroom.id}`);
+  };
+
+  const handleDelete = (classroom) => {
+    Alert.alert("Eliminar", `Aula ${classroom.id} eliminada`);
+  };
 
   return (
-    <View className="flex-1 relative">
-      <Image 
-        source={require("../assets/fondo.jpg")} 
-        className="absolute w-full h-full opacity-30" 
-        resizeMode="cover" 
+    <View className="flex-1">
+      <Image
+        source={require("../assets/bg.png")}
+        className="absolute top-0 left-0 w-full h-full"
+        style={{ width: "600%", height: "100%" }}
+        resizeMode="cover"
       />
 
-      <ScrollView className="flex-1">
-        <View className="p-4">
-          <View className="flex-row items-center ml-2.5 mb-6">
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-              <Icon name="home" size={25} color="#000" />
-            </TouchableOpacity>
-            <Text className="text-xl ml-2.5">Docencias - D4</Text>
-          </View>
+      <Header navigation={navigation} />
 
-          {/* Nuevo buscador */}
-          <View className="items-center">
-            <View className="flex-row items-center w-full h-10 border border-black rounded-xl bg-white">
-              <TextInput 
-                className="flex-1 h-full pl-3" 
-                placeholder="Buscar usuario..." 
-                value={searchQuery} 
-                onChangeText={setSearchQuery} 
-              />
-              <TouchableOpacity 
-                className="bg-[rgba(222,255,53,0.8)] w-10 h-full justify-center items-center rounded-r-xl" 
-              >
-                <Icon name="search" size={20} color="black" />
-              </TouchableOpacity>
-            </View>
-          </View>
+      {/* Breadcrumb Navigation */}
+      <View className="m-4 ml-6 flex-row items-center">
+        <Icon className="mr-2" name="home" size={25} color="#000" />
+        <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+        <Text className="mr-2 text-xl">Docencias</Text>
+        <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+        <Text className="text-xl">D4</Text>
+
+      </View>
+
+      {/* Search Bar */}
+      <View className="items-center mt-2 py-2 px-1">
+        <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
+          <TextInput
+            className="flex-1 h-full pl-3"
+            placeholder="Buscar aula..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <TouchableOpacity
+            className="bg-[rgba(222,255,53,0.8)] w-10 h-full justify-center items-center rounded-r-xl"
+          >
+            <Icon name="search" size={20} color="black" />
+          </TouchableOpacity>
         </View>
+      </View>
 
-        <View className="px-4">
-          {classrooms.map((classroom, index) => (
-            <TouchableOpacity 
-              key={index} 
-              className="mb-4 p-4 bg-white rounded-lg shadow-sm shadow-black" 
-              onPress={() => navigation.navigate("ClassroomDetails", { classroom })}
-            >
-              <View className="flex-row justify-between items-center">
-                <View>
-                  <Text className="text-lg font-bold text-gray-800">Nombre: {classroom.id}</Text>
-                  <Text className="text-base text-gray-600 mt-2">Dispositivos registrados: {classroom.devices}</Text>
-                </View>
-                <View className="flex-row">
-                  <TouchableOpacity onPress={() => console.log("Editar")} className="mr-2.5">
-                    <Icon name="create" size={24} color="#000" />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log("Eliminar")}>
-                    <Icon name="trash" size={24} color="#000" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      {/* Classrooms List */}
+      <FlatList
+        data={filteredClassrooms}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <ClassroomCard
+            classroom={item}
+            navigation={navigation}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
+        contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+      />
 
-      <TouchableOpacity 
-        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black" 
-        onPress={() => navigation.navigate("AddDevice")} 
+      {/* Add Classroom Button */}
+      <TouchableOpacity
+        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
+        onPress={() => navigation.navigate("AddClassroom")}
       >
         <Icon name="add" size={30} color="#000" />
       </TouchableOpacity>

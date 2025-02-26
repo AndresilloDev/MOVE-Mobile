@@ -1,22 +1,29 @@
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import Header from "../components/Header";
 
-const SelectedDeviceScreen = () => {
+const SelectedDeviceScreen = ({navigation}) => {
     return (
-        <View className="flex-1 relative" >
-            <Image
-                source={require("../assets/fondo.jpg")}
-                className="absolute w-full h-full opacity-30"
-                resizeMode="cover"
-            />
+        <View className="flex-1" >
+
+        <Image
+            source={require("../assets/bg.png")} 
+            className="absolute top-0 left-0 w-fill h-full" 
+            style={{ width: "600%", height: "100%"}}
+            resizeMode="cover" 
+      	/>
+
+        <Header navigation={navigation} />
+
             <View className="p-4">
-                <View className="flex-row items-center ml-2.5 mb-6">
-                    <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-                        <Icon name="home" size={25} color="#000"/>
-                    </TouchableOpacity>
-                    <Text className="text-xl ml-2.5">Notificación - Temperatura</Text>
-                </View>
+            <View className="flex-row items-center ml-2.5 mb-6">
+                <Icon className="mr-2" name="home" size={25} color="#000" />
+                <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+                <Text className="mr-2 text-xl">Notificaciones</Text>
+                <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+                <Text className="text-xl">Temperatura</Text>
+            </View>
             </View>
             <View className="px-4">
                 <View className="mb-4 p-4 bg-white rounded-lg shadow-sm shadow-black flex-row justify-between">

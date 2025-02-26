@@ -83,11 +83,11 @@ const DevicesScreen = ({ navigation }) => {
   };
 
   return (
-    <View className="flex-1 bg-gray-100">
+    <View className="flex-1">
       <Image
         source={require("../assets/bg.png")}
         className="absolute top-0 left-0 w-full h-full"
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "600%", height: "100%" }}
         resizeMode="cover"
       />
 
@@ -96,7 +96,7 @@ const DevicesScreen = ({ navigation }) => {
       {/* Breadcrumb Navigation */}
       <View className="m-4 ml-6 flex-row items-center">
         <Icon className="mr-2" name="home" size={25} color="#000" />
-        <Icon className="mr-2" name="caret-forward" size={25} color="#000" />
+        <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
         <Text className="text-xl">Dispositivos</Text>
       </View>
 
@@ -106,6 +106,7 @@ const DevicesScreen = ({ navigation }) => {
           <TextInput
             className="flex-1 h-full pl-3"
             placeholder="Buscar dispositivo..."
+            placeholderTextColor={"gray"}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />

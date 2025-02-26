@@ -1,20 +1,26 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, ImageBackground } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 import { AuthContext } from "../context/AuthContext";
+import Header from "../components/Header";
 
-const ChangePasswordRecoverScreen = () => {
+const ChangePasswordRecoverScreen = ({navigation}) => {
     const [code, setCode] = useState(["", "", "", "", ""]);
 
     const { login } = useContext(AuthContext);
 
     return (
         <View className="flex-1">
-            <ImageBackground
-                source={require('../assets/fondo.jpg')}
-                className="flex-1"
-                style={{ opacity: 0.5 }}
-            />
-            <View className="absolute inset-0 justify-center items-center bg-white bg-opacity-70 p-4 rounded-lg">
+
+        <Image
+            source={require("../assets/bg.png")} 
+            className="absolute top-0 left-0 w-fill h-full" 
+            style={{ width: "600%", height: "100%"}}
+            resizeMode="cover" 
+      	/>
+
+        <Header navigation={navigation} />
+            
+            <View className="mt-60 justify-center items-center p-4 rounded-lg">
                 <Text className="text-xl font-bold mb-6 text-center text-black">Confirmar tu cuenta</Text>
                 <View className="flex-row justify-between mb-6">
                     {code.map((digit, index) => (
@@ -32,10 +38,14 @@ const ChangePasswordRecoverScreen = () => {
                         />
                     ))}
                 </View>
-                <TouchableOpacity className="bg-[#DEFF35] border border-black rounded-lg w-32 py-2"
-                    onPress={() => login("admin","admin123")}>
-                    <Text className="text-center text-black font-bold">Confirmar</Text>
-                </TouchableOpacity>
+
+                <TouchableOpacity
+				className="bg-action-primary rounded-lg px-8 border-lines"
+				style={{ borderWidth: 1.3, paddingVertical: 5, width: "80%" }}
+				onPress={() => login("admin","admin123")}>
+				<Text className="text-primary text-lg text-center">Iniciar Sesión</Text>
+
+			    </TouchableOpacity>
             </View>
         </View>
     );

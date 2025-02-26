@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from "reac
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
+import Header from "../components/Header";
 
 const NotificationsScreen = () => {
   const navigation = useNavigation();
@@ -16,19 +17,22 @@ const NotificationsScreen = () => {
 
   return (
     <View className="flex-1 relative">
-      <Image 
-        source={require("../assets/fondo.jpg")} 
-        className="absolute w-full h-full opacity-30" 
-        resizeMode="cover" 
-      />
+
+        <Image
+            source={require("../assets/bg.png")} 
+            className="absolute top-0 left-0 w-fill h-full" 
+            style={{ width: "600%", height: "100%"}}
+            resizeMode="cover" 
+      	/>
+
+        <Header navigation={navigation} />
 
       <ScrollView className="flex-1">
         <View className="p-4">
           <View className="flex-row items-center ml-2.5 mb-6">
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-              <Icon name="home" size={25} color="#000" />
-            </TouchableOpacity>
-            <Text className="text-xl ml-2.5">Notificaciones</Text>
+              <Icon className="mr-2" name="home" size={25} color="#000" />
+              <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+            <Text className="text-xl">Notificaciones</Text>
           </View>
         </View>
 

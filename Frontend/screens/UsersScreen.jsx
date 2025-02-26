@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ImageBackground } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from '@expo/vector-icons';
+import Header from "../components/Header";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const UsersScreen = () => {
     const navigation = useNavigation();
@@ -22,12 +24,25 @@ const UsersScreen = () => {
     };
 
     return (
-        <ImageBackground
-            source={require("../assets/fondo.jpg")}
-            style={{ flex: 1 }}
-            resizeMode="cover"
-        >
-            <View className="flex-1 bg-gray-50/80">
+            <View className="flex-1">
+
+        <Image
+            source={require("../assets/bg.png")} 
+            className="absolute top-0 left-0 w-fill h-full" 
+            style={{ width: "600%", height: "100%"}}
+            resizeMode="cover" 
+      	/>
+
+        <Header navigation={navigation} />
+
+                    <View className="p-4">
+                    <View className="flex-row items-center ml-2.5 mb-6">
+                        <Icon className="mr-2" name="home" size={25} color="#000" />
+                        <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+                        <Text className="mr-2 text-xl">Administradores</Text>
+                    </View>
+                    </View>
+
                 <View className="p-4 items-center">
                     <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
                         <TextInput
@@ -85,26 +100,7 @@ const UsersScreen = () => {
                     <Text className="font-bold text-lg text-center">Agregar administrador</Text>
                 </TouchableOpacity>
 
-                <View className="flex-row justify-around py-2 border-t border-gray-300">
-                    <TouchableOpacity className="items-center">
-                        <Ionicons name="laptop" size={24} color="black" />
-                        <Text>Dispositivos</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="items-center">
-                        <Ionicons name="book" size={24} color="black" />
-                        <Text>Docencias</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="bg-[rgba(222,255,53,0.8)] rounded-md p-1">
-                        <Ionicons name="person" size={24} color="black" />
-                        <Text className="font-bold">Administradores</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity className="items-center">
-                        <Ionicons name="notifications" size={24} color="black" />
-                        <Text>Notificaciones</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
-        </ImageBackground>
     );
 };
 
