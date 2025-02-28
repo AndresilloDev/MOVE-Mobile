@@ -66,13 +66,13 @@ const SelectedDeviceScreen = ({ navigation }) => {
       <Header navigation={navigation} />
 
         <View className="p-4">
-        <View className="flex-row items-center ml-2.5">
-            <Icon className="mr-2" name="home" size={25} color="#000" />
-            <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
-            <Text className="mr-2 text-xl">Notificaciones</Text>
-            <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
-            <Text className="text-xl">Temperatura</Text>
-        </View>
+          <View className="flex-row items-center ml-2.5">
+			<Icon style={{ marginRight: 8 }} name="home" size={25} color="#000" />
+			<Icon style={{ marginRight: 8 }} name="chevron-forward-sharp" size={25} color="#000" />
+			<Text className="mr-2 text-xl">Notificaciones</Text>
+			<Icon style={{ marginRight: 8 }} name="chevron-forward-sharp" size={25} color="#000" />
+			<Text className="text-xl">Temperatura</Text>
+          </View>
         </View>
       
 
@@ -84,12 +84,20 @@ const SelectedDeviceScreen = ({ navigation }) => {
 
       <View className="p-4 flex-row">
         <View className="flex-1">
-          <Text className="text-left text-lg font-bold">Dispositivo: <Text className="font-normal">#42035</Text></Text>
-          <Text className="text-left text-lg font-bold">Nombre: <Text className="font-normal">D4 - CC11</Text></Text>
+          <Text className="text-left text-lg font-bold">
+            Dispositivo: <Text style={{ fontWeight: "normal" }}>#42035</Text>
+          </Text>
+          <Text className="text-left text-lg font-bold">
+            Nombre: <Text style={{ fontWeight: "normal" }}>D4 - CC11</Text>
+          </Text>
         </View>
         <View className="flex-1">
-          <Text className="text-right text-lg font-bold">Aula: <Text className="font-normal">CC11</Text></Text>
-          <Text className="text-right text-lg font-bold">Docencia: <Text className="font-normal">D4</Text></Text>
+          <Text className="text-right text-lg font-bold">
+            Aula: <Text style={{ fontWeight: "normal" }}>CC11</Text>
+          </Text>
+          <Text className="text-right text-lg font-bold">
+            Docencia: <Text style={{ fontWeight: "normal" }}>D4</Text>
+          </Text>
         </View>
       </View>
 
