@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
+import BuildingsScreen from "./BuildingsScreen";
 
 const classrooms = [
   { id: "CC11", devices: 1 },
@@ -69,7 +70,9 @@ const ClassroomsScreen = () => {
 
       {/* Breadcrumb Navigation */}
       <View className="m-4 ml-6 flex-row items-center">
-        <Icon className="mr-2" name="home" size={25} color="#000" />
+        <TouchableOpacity onPress={() => navigation.goBack(BuildingsScreen)}>
+          <Icon name="home" size={25} color="#000" />
+        </TouchableOpacity>
         <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
         <Text className="mr-2 text-xl">Docencias</Text>
         <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />

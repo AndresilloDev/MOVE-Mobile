@@ -24,44 +24,28 @@ const devices = [
   { id: "246574", name: "D10 - CC17", room: "CC17", teaching: "D5" },
 ];
 
-const DeviceCard = ({
-    device,
-    isAddNew = false,
-    navigation,
-    onEdit,
-    onDelete,
-  }) => (
-    <TouchableOpacity
-      className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
-      onPress={() => !isAddNew && navigation.navigate("SelectedDevice", { device })}
-    >
-      {isAddNew ? (
-        <View className="flex-1 justify-center items-center p-2">
-          <Text className="text-2xl text-secondary">➕</Text>
-          <Text className="text-gray-600">Añadir nuevo dispositivo</Text>
-        </View>
-      ) : (
-        <>
-          <View>
-            <Text className="font-bold mb-2">Dispositivo: #{device.id}</Text>
-            <Text className="font-bold">Nombre: <Text className="font-normal">{device.name}</Text></Text>
-            <Text>Aula: {device.room}</Text>
-            <Text>Docencia: {device.teaching}</Text>
-          </View>
-  
-          <View className="flex flex-row space-x-2 items-end">
-            <TouchableOpacity onPress={() => onEdit(device)}>
-              <Icon name="create-outline" size={24} color="#4CAF50" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => onDelete(device)}>
-              <Icon name="trash-outline" size={24} color="#F44336" />
-            </TouchableOpacity>
-          </View>
-        </>
-      )}
-    </TouchableOpacity>
-  );
-  
+const DeviceCard = ({ device, navigation, onEdit, onDelete }) => (
+  <TouchableOpacity
+    className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
+    onPress={() => navigation.navigate("SelectedDevice", { device })}
+  >
+    <View>
+      <Text className="font-bold mb-2">Dispositivo: #{device.id}</Text>
+      <Text className="font-bold">Nombre: <Text className="font-normal">{device.name}</Text></Text>
+      <Text>Aula: {device.room}</Text>
+      <Text>Docencia: {device.teaching}</Text>
+    </View>
+
+    <View className="flex flex-row space-x-2 items-end">
+      <TouchableOpacity onPress={() => onEdit(device)}>
+        <Icon name="create-outline" size={24} color="#4CAF50" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => onDelete(device)}>
+        <Icon name="trash-outline" size={24} color="#F44336" />
+      </TouchableOpacity>
+    </View>
+  </TouchableOpacity>
+);
 
 const DevicesScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -71,8 +55,6 @@ const DevicesScreen = ({ navigation }) => {
       value.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-
-  const devicesWithAddButton = [...filteredDevices, { id: "add_new" }];
 
   const handleEdit = (device) => {
     Alert.alert("Editar", `Editar información de ${device.name}`);
@@ -120,22 +102,26 @@ const DevicesScreen = ({ navigation }) => {
 
       {/* Devices List */}
       <FlatList
-        data={devicesWithAddButton}
+        data={filteredDevices}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) =>
-          item.id === "add_new" ? (
-            <DeviceCard isAddNew />
-          ) : (
-            <DeviceCard
-              device={item}
-              navigation={navigation}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )
-        }
+        renderItem={({ item }) => (
+          <DeviceCard
+            device={item}
+            navigation={navigation}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
         contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
       />
+
+      {/* Add Device Button */}
+      <TouchableOpacity
+        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
+        onPress={() => navigation.navigate("AddDevice")}
+      >
+        <Icon name="add" size={30} color="#000" />
+      </TouchableOpacity>
     </View>
   );
 };

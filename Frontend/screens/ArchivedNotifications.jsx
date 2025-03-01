@@ -3,6 +3,8 @@ import { View, Text, ScrollView, TouchableOpacity, Image, Modal, StyleSheet } fr
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
+import Header from "../components/Header"; 
+import NotificationsScreen from "./NotificationsScreen";
 
 const ArchivedNotifications = ({}) => {
   const navigation = useNavigation();
@@ -38,13 +40,18 @@ const ArchivedNotifications = ({}) => {
         resizeMode="cover" 
       />
 
+      <Header navigation={navigation} />
+
       <ScrollView className="flex-1">
         <View className="p-4">
           <View className="flex-row items-center ml-2.5 mb-6">
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => navigation.goBack(NotificationsScreen)}>
               <Icon name="home" size={25} color="#000" />
             </TouchableOpacity>
-            <Text className="text-xl ml-2.5">Notificaciones Archivadas</Text>
+            <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+            <Text className="text-xl">Notificaciones</Text>
+            <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
+            <Text className="text-xl ml-.5">Archivadas</Text>
           </View>
         </View>
 
@@ -73,13 +80,6 @@ const ArchivedNotifications = ({}) => {
           ))}
         </View>
       </ScrollView>
-
-      <TouchableOpacity 
-        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black" 
-        onPress={() => navigation.navigate("Notifications")} 
-      >
-        <Icon name="notifications" size={30} color="#000" /> 
-      </TouchableOpacity>
 
       <StatusBar style="dark" />
 

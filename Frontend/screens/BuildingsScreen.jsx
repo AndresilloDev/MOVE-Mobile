@@ -20,34 +20,25 @@ const buildings = [
   { id: "4", name: "D1", number_of_devices: 6, number_of_spaces: 6 },
 ];
 
-const BuildingCard = ({ building, isAddNew = false, navigation, onEdit, onDelete }) => (
+const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
   <TouchableOpacity
     className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
-    onPress={() => !isAddNew && navigation.navigate("Classrooms", { building })}
+    onPress={() => navigation.navigate("Classrooms", { building })}
   >
-    {isAddNew ? (
-      <View className="flex-1 justify-center items-center p-2">
-        <Text className="text-2xl text-secondary">➕</Text>
-        <Text className="text-gray-600">Añadir nueva docencia</Text>
-      </View>
-    ) : (
-      <>
-        <View>
-          <Text className="font-bold mb-2">Nombre: <Text className="font-normal">{building.name}</Text></Text>
-          <Text>Dispositivos Registrados: {building.number_of_devices}</Text>
-          <Text>Aulas Registradas: {building.number_of_spaces}</Text>
-        </View>
+    <View>
+      <Text className="font-bold mb-2">Nombre: <Text className="font-normal">{building.name}</Text></Text>
+      <Text>Dispositivos Registrados: {building.number_of_devices}</Text>
+      <Text>Aulas Registradas: {building.number_of_spaces}</Text>
+    </View>
 
-        <View className="flex flex-row space-x-2 items-end">
-          <TouchableOpacity onPress={() => onEdit(building)}>
-            <Icon name="create-outline" size={24} color="#4CAF50" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onDelete(building)}>
-            <Icon name="trash-outline" size={24} color="#F44336" />
-          </TouchableOpacity>
-        </View>
-      </>
-    )}
+    <View className="flex flex-row space-x-2 items-end">
+      <TouchableOpacity onPress={() => onEdit(building)}>
+        <Icon name="create-outline" size={24} color="#4CAF50" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => onDelete(building)}>
+        <Icon name="trash-outline" size={24} color="#F44336" />
+      </TouchableOpacity>
+    </View>
   </TouchableOpacity>
 );
 
@@ -60,8 +51,6 @@ const BuildingsScreen = () => {
       value.toString().toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-
-  const buildingsWithAddButton = [...filteredBuildings, { id: "add_new" }];
 
   const handleEdit = (building) => {
     Alert.alert("Editar", `Editar información de ${building.name}`);
@@ -107,22 +96,26 @@ const BuildingsScreen = () => {
 
       {/* Buildings List */}
       <FlatList
-        data={buildingsWithAddButton}
+        data={filteredBuildings}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) =>
-          item.id === "add_new" ? (
-            <BuildingCard isAddNew navigation={navigation} />
-          ) : (
-            <BuildingCard
-              building={item}
-              navigation={navigation}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )
-        }
+        renderItem={({ item }) => (
+          <BuildingCard
+            building={item}
+            navigation={navigation}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        )}
         contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
       />
+
+      {/* Add Buildings Button */}
+      <TouchableOpacity
+        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
+        onPress={() => navigation.navigate("AddBuilding")}
+      >
+        <Icon name="add" size={30} color="#000" />
+      </TouchableOpacity>
 
       <StatusBar style="dark" />
     </View>
