@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   FlatList,
   TextInput,
-  Alert,
+  Modal,
+  StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-import BuildingsScreen from "./BuildingsScreen";
 
 const classrooms = [
   { id: "CC11", devices: 1 },
@@ -21,11 +21,8 @@ const classrooms = [
   { id: "CC14", devices: 1 },
 ];
 
-const ClassroomCard = ({ classroom, navigation, onEdit, onDelete }) => (
-  <TouchableOpacity
-    className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
-    onPress={() => navigation.navigate("ClassroomDetails", { classroom })}
-  >
+const ClassroomCard = ({ classroom, onEdit, onDelete }) => (
+  <View className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6">
     <View>
       <Text className="font-bold mb-2">Aula: {classroom.id}</Text>
       <Text>Dispositivos registrados: {classroom.devices}</Text>
@@ -38,23 +35,47 @@ const ClassroomCard = ({ classroom, navigation, onEdit, onDelete }) => (
         <Icon name="trash-outline" size={24} color="#F44336" />
       </TouchableOpacity>
     </View>
-  </TouchableOpacity>
+  </View>
 );
 
 const ClassroomsScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [selectedClassroom, setSelectedClassroom] = useState(null);
+
+  let timeoutId; 
 
   const filteredClassrooms = classrooms.filter((classroom) =>
     classroom.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (classroom) => {
-    Alert.alert("Editar", `Editar información del aula ${classroom.id}`);
+    navigation.navigate("EditClassroom", { classroom });
   };
 
   const handleDelete = (classroom) => {
-    Alert.alert("Eliminar", `Aula ${classroom.id} eliminada`);
+    setSelectedClassroom(classroom);
+    setIsDeleteModalVisible(true);
+  };
+
+  const confirmDelete = () => {
+    setIsDeleteModalVisible(false);
+    setIsSuccessModalVisible(true); 
+
+    timeoutId = setTimeout(() => {
+      setIsSuccessModalVisible(false);
+    }, 3000); 
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalVisible(false);
+  };
+
+  const handleSuccessOk = () => {
+    setIsSuccessModalVisible(false);
+    clearTimeout(timeoutId);
   };
 
   return (
@@ -68,19 +89,16 @@ const ClassroomsScreen = () => {
 
       <Header navigation={navigation} />
 
-      {/* Breadcrumb Navigation */}
       <View className="m-4 ml-6 flex-row items-center">
-        <TouchableOpacity onPress={() => navigation.goBack(BuildingsScreen)}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="home" size={25} color="#000" />
         </TouchableOpacity>
         <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
         <Text className="mr-2 text-xl">Docencias</Text>
         <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
         <Text className="text-xl">D4</Text>
-
       </View>
 
-      {/* Search Bar */}
       <View className="items-center mt-2 py-2 px-1">
         <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
           <TextInput
@@ -97,14 +115,12 @@ const ClassroomsScreen = () => {
         </View>
       </View>
 
-      {/* Classrooms List */}
       <FlatList
         data={filteredClassrooms}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ClassroomCard
             classroom={item}
-            navigation={navigation}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />
@@ -112,7 +128,6 @@ const ClassroomsScreen = () => {
         contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
       />
 
-      {/* Add Classroom Button */}
       <TouchableOpacity
         className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
         onPress={() => navigation.navigate("AddClassroom")}
@@ -120,9 +135,107 @@ const ClassroomsScreen = () => {
         <Icon name="add" size={30} color="#000" />
       </TouchableOpacity>
 
+      <Modal
+        visible={isDeleteModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={cancelDelete}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Eliminar Aula</Text>
+            <Text style={styles.modalMessage}>
+              ¿Estás seguro de que deseas eliminar el aula {selectedClassroom?.id}?
+            </Text>
+            <View style={styles.modalButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={cancelDelete}
+              >
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.confirmButton]}
+                onPress={confirmDelete}
+              >
+                <Text style={styles.confirmButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={isSuccessModalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleSuccessOk}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Éxito</Text>
+            <Text style={styles.modalMessage}>
+              Aula {selectedClassroom?.id} eliminada.
+            </Text>
+          </View>
+        </View>
+      </Modal>
+
       <StatusBar style="dark" />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "80%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#000", 
+  },
+  modalMessage: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#000", // Texto en negro
+  },
+  modalButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  modalButton: {
+    flex: 1,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: "#e0e0e0",
+  },
+  confirmButton: {
+    backgroundColor: "#DEFF35",
+  },
+  cancelButtonText: {
+    color: "#000",
+  },
+  confirmButtonText: {
+    color: "#000", 
+  },
+});
 
 export default ClassroomsScreen;
