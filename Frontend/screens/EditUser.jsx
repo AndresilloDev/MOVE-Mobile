@@ -1,29 +1,63 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, TextInput, Modal, StyleSheet } from "react-native";
+import {
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    TextInput,
+    Modal,
+    StyleSheet,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
+import { updateUser } from "../api/users.api";
 
-const EditUser  = ({ route }) => {
+const EditUser = ({ route }) => {
     const navigation = useNavigation();
-    const { user } = route.params; // Recibe el usuario a editar
+    const { user } = route.params;
     const [name, setName] = useState(user.name);
-    const [surname, setSurname] = useState(user.surname);
-    const [email, setEmail] = useState(user.username);
+    const [lastName, setLastName] = useState(user.lastName);
+    const [userEmail, setUserEmail] = useState(user.user);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
 
-    const handleSave = () => {
-        if (!name || !surname || !email) {
+    const handleSave = async () => {
+        if (!name || !lastName || !userEmail) {
             setModalMessage("Por favor, completa todos los campos.");
             setIsModalVisible(true);
             return;
         }
 
-        // Aquí puedes agregar la lógica para editar el usuario
-        setModalMessage(`Administrador ${name} ${surname} editado con éxito.`);
-        setIsModalVisible(true);
+        try {
+            const updatedUser = {
+                name,
+                lastName,
+                user: userEmail
+            };
+
+            const response = await updateUser(user._id, updatedUser);
+
+            if (response && response._id) {
+                setModalMessage(`Administrador ${name} ${lastName} actualizado con éxito.`);
+                setIsModalVisible(true);
+            } else {
+                throw new Error(response.error || "No se pudo actualizar el usuario");
+            }
+        } catch (error) {
+            console.error("Error updating user:", error);
+            let errorMessage = "Error al actualizar el administrador. Por favor, inténtalo de nuevo.";
+
+            if (error.response) {
+                errorMessage = error.response.data.error || errorMessage;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+
+            setModalMessage(errorMessage);
+            setIsModalVisible(true);
+        }
     };
 
     const handleConfirm = () => {
@@ -67,27 +101,28 @@ const EditUser  = ({ route }) => {
                 <TextInput
                     className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
                     placeholder="Ej: Jimenez"
-                    value={surname}
-                    onChangeText={setSurname}
+                    value={lastName}
+                    onChangeText={setLastName}
                 />
 
-                <Text className="text-lg font-bold mb-2">Correo</Text>
+                <Text className="text-lg font-bold mb-2">Usuario (Correo)</Text>
                 <TextInput
                     className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
-                    placeholder="Ej: 20233tn097@utez"
-                    value={email}
-                    onChangeText={setEmail}
+                    placeholder="Ej: 20233tn097@utez.edu.mx"
+                    value={userEmail}
+                    onChangeText={setUserEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                 />
 
                 <TouchableOpacity
                     className="bg-[rgba(222,255,53,0.8)] h-12 rounded-xl items-center justify-center"
                     onPress={handleSave}
                 >
-                    <Text className="text-lg font-bold">Editar</Text>
+                    <Text className="text-lg font-bold">Guardar Cambios</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Modal de Alerta */}
             <Modal
                 visible={isModalVisible}
                 transparent={true}
@@ -175,4 +210,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EditUser ;
+export default EditUser;

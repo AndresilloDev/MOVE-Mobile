@@ -27,11 +27,11 @@ export const getUser = async (userId) => {
 //Actualizar un usuario
 export const updateUser = async (userId, user) => {
     try {
-        const response = await api.put(`/${endpoint}/${userId}`, user);
+        const response = await api.put(`${endpoint}/${userId}`, user);
         return response.data;
     } catch (error) {
         console.error("updateUser error:", error);
-        return {};
+        throw error;
     }
 }
 
@@ -53,6 +53,6 @@ export const register = async (user) => {
         return response.data;
     } catch (error) {
         console.error("createUser error:", error);
-        return {};
+        throw error.response ? error.response.data : new Error("Error de registro");
     }
 }

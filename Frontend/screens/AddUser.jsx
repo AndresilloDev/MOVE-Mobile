@@ -1,22 +1,31 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, TextInput, Modal, StyleSheet } from "react-native";
+import {
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    TextInput,
+    Modal,
+    StyleSheet
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
+import { register } from "../api/users.api";
 
-const AddUser  = () => {
+const AddUser = () => {
     const navigation = useNavigation();
     const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
-    const [email, setEmail] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
 
-    const handleSave = () => {
-        if (!name || !surname || !email || !password || !confirmPassword) {
+    const handleSave = async () => {
+        if (!name || !lastName || !user || !password || !confirmPassword) {
             setModalMessage("Por favor, completa todos los campos.");
             setIsModalVisible(true);
             return;
@@ -28,9 +37,44 @@ const AddUser  = () => {
             return;
         }
 
-        // Aquí puedes agregar la lógica para guardar el usuario
-        setModalMessage(`Administrador ${name} ${surname} agregado con éxito.`);
-        setIsModalVisible(true);
+        if (password.length < 6) {
+            setModalMessage("La contraseña debe tener al menos 6 caracteres.");
+            setIsModalVisible(true);
+            return;
+        }
+
+        try {
+            const newUser = {
+                name,
+                lastName,
+                user,
+                password
+            };
+
+            const response = await register(newUser);
+
+            if (response.error) {
+                throw new Error(response.error);
+            }
+
+            setModalMessage(`Administrador ${name} ${lastName} registrado con éxito.`);
+            setIsModalVisible(true);
+
+            setName("");
+            setLastName("");
+            setUser("");
+            setPassword("");
+            setConfirmPassword("");
+
+        } catch (error) {
+            console.error("Error adding user:", error);
+
+            const errorMessage = error.message ||
+                "Error al registrar el administrador. Por favor, inténtalo de nuevo.";
+
+            setModalMessage(errorMessage);
+            setIsModalVisible(true);
+        }
     };
 
     const handleConfirm = () => {
@@ -74,22 +118,24 @@ const AddUser  = () => {
                 <TextInput
                     className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
                     placeholder="Ej: Jimenez"
-                    value={surname}
-                    onChangeText={setSurname}
+                    value={lastName}
+                    onChangeText={setLastName}
                 />
 
-                <Text className="text-lg font-bold mb-2">Correo</Text>
+                <Text className="text-lg font-bold mb-2">Usuario (Correo)</Text>
                 <TextInput
                     className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
-                    placeholder="Ej: 20233tn097@utez"
-                    value={email}
-                    onChangeText={setEmail}
+                    placeholder="Ej: 20233tn097@utez.edu.mx"
+                    value={user}
+                    onChangeText={setUser}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                 />
 
                 <Text className="text-lg font-bold mb-2">Contraseña</Text>
                 <TextInput
                     className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
-                    placeholder="********"
+                    placeholder="Mínimo 6 caracteres"
                     secureTextEntry
                     value={password}
                     onChangeText={setPassword}
@@ -98,7 +144,7 @@ const AddUser  = () => {
                 <Text className="text-lg font-bold mb-2">Confirmar Contraseña</Text>
                 <TextInput
                     className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
-                    placeholder="********"
+                    placeholder="Repite la contraseña"
                     secureTextEntry
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
@@ -108,11 +154,10 @@ const AddUser  = () => {
                     className="bg-[rgba(222,255,53,0.8)] h-12 rounded-xl items-center justify-center"
                     onPress={handleSave}
                 >
-                    <Text className="text-lg font-bold">Agregar</Text>
+                    <Text className="text-lg font-bold">Registrar</Text>
                 </TouchableOpacity>
             </View>
 
-            {/* Modal de Alerta */}
             <Modal
                 visible={isModalVisible}
                 transparent={true}
@@ -200,4 +245,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AddUser ;
+export default AddUser;

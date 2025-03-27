@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -8,28 +8,23 @@ import {
     TextInput,
     Modal,
     StyleSheet,
+    Switch
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-
-const users = [
-    { id: 129340, username: "20233tn097@utez", name: "Sebastian", surname: "Jimenez" },
-    { id: 129341, username: "20233tn098@utez", name: "Carlos", surname: "Hernandez" },
-    { id: 129342, username: "20233tn099@utez", name: "Maria", surname: "Lopez" },
-    { id: 129343, username: "20233tn100@utez", name: "Ronal", surname: "Dinho" },
-    { id: 129344, username: "20233tn101@utez", name: "Cesar", surname: "Rin" },
-    { id: 129345, username: "20233tn102@utez", name: "Erikiti", surname: "Rijillo" },
-];
+import { getUsers, deleteUser } from "../api/users.api";
 
 const UserCard = ({ user, onEdit, onDelete }) => (
     <View className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6">
-        <View>
-            <Text className="font-bold mb-2">Usuario: {user.username}</Text>
-            <Text>Nombre: {user.name} {user.surname}</Text>
+        <View className="flex-1">
+            <Text className="font-bold mb-1">Usuario: {user.user}</Text>
+            <Text className="mb-1">Nombre: {user.name} {user.lastName}</Text>
+            <Text className="mb-1">Tipo: {user.isSuperAdmin ? "Super Admin" : "Admin"}</Text>
+            <Text>Estado: {user.status ? "Activo" : "Inactivo"}</Text>
         </View>
-        <View className="flex flex-row space-x-2 items-end">
+        <View className="flex flex-row space-x-2 items-center">
             <TouchableOpacity onPress={() => onEdit(user)}>
                 <Icon name="create-outline" size={24} color="#4CAF50" />
             </TouchableOpacity>
@@ -45,30 +40,60 @@ const UsersScreen = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
-    const [selectedUser , setSelectedUser ] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [users, setUsers] = useState([]);
+    const [showActiveOnly, setShowActiveOnly] = useState(true);
 
-    let timeoutId;
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const usersData = await getUsers();
+                setUsers(usersData);
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
 
-    const filteredUsers = users.filter((user) =>
-        user.username.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+        const unsubscribe = navigation.addListener('focus', () => {
+            fetchUsers();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+
+    const filteredUsers = users.filter((user) => {
+        const matchesSearch = user.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.lastName.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus = showActiveOnly ? user.status : true;
+        return matchesSearch && matchesStatus;
+    });
 
     const handleEdit = (user) => {
         navigation.navigate("EditUser", { user });
     };
 
     const handleDelete = (user) => {
-        setSelectedUser (user);
+        setSelectedUser(user);
         setIsDeleteModalVisible(true);
     };
 
-    const confirmDelete = () => {
-        setIsDeleteModalVisible(false);
-        setIsSuccessModalVisible(true);
+    const confirmDelete = async () => {
+        try {
+            await deleteUser(selectedUser._id);
+            setUsers(users.map(user =>
+                user._id === selectedUser._id ? {...user, status: false} : user
+            ));
+            setIsDeleteModalVisible(false);
+            setIsSuccessModalVisible(true);
 
-        timeoutId = setTimeout(() => {
-            setIsSuccessModalVisible(false);
-        }, 3000);
+            setTimeout(() => {
+                setIsSuccessModalVisible(false);
+            }, 3000);
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            setIsDeleteModalVisible(false);
+        }
     };
 
     const cancelDelete = () => {
@@ -77,7 +102,6 @@ const UsersScreen = () => {
 
     const handleSuccessOk = () => {
         setIsSuccessModalVisible(false);
-        clearTimeout(timeoutId);
     };
 
     return (
@@ -115,17 +139,31 @@ const UsersScreen = () => {
                 </View>
             </View>
 
+            <View className="mx-6 mt-2 flex-row items-center justify-between">
+                <Text>Mostrar solo activos</Text>
+                <Switch
+                    value={showActiveOnly}
+                    onValueChange={setShowActiveOnly}
+                    trackColor={{ false: "#767577", true: "#DEFF35" }}
+                />
+            </View>
+
             <FlatList
                 data={filteredUsers}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item._id.toString()}
                 renderItem={({ item }) => (
                     <UserCard
-                          user={item}
-                          onEdit={handleEdit}
-                          onDelete={handleDelete}
+                        user={item}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                     />
                 )}
                 contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+                ListEmptyComponent={
+                    <View className="items-center mt-10">
+                        <Text>No se encontraron usuarios</Text>
+                    </View>
+                }
             />
 
             <TouchableOpacity
@@ -143,9 +181,9 @@ const UsersScreen = () => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Eliminar Administrador</Text>
+                        <Text style={styles.modalTitle}>Desactivar Administrador</Text>
                         <Text style={styles.modalMessage}>
-                            ¿Estás seguro de que deseas eliminar al administrador {selectedUser?.username}?
+                            ¿Estás seguro de que deseas desactivar al administrador {selectedUser?.user}?
                         </Text>
                         <View style={styles.modalButtonsContainer}>
                             <TouchableOpacity
@@ -158,7 +196,7 @@ const UsersScreen = () => {
                                 style={[styles.modalButton, styles.confirmButton]}
                                 onPress={confirmDelete}
                             >
-                                <Text style={styles.confirmButtonText}>Eliminar</Text>
+                                <Text style={styles.confirmButtonText}>Desactivar</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -175,7 +213,7 @@ const UsersScreen = () => {
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>Éxito</Text>
                         <Text style={styles.modalMessage}>
-                            Administrador {selectedUser ?.username} eliminado.
+                            Administrador {selectedUser?.user} desactivado.
                         </Text>
                         <TouchableOpacity
                             style={[styles.modalButton, styles.confirmButton]}
