@@ -1,6 +1,9 @@
 {
   "expo": {
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "name": "Frontend",
     "slug": "Frontend",
     "version": "1.0.0",
@@ -14,7 +17,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.elegidokawai.Frontend"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,9 +26,6 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.BLUETOOTH",
-        "android.permission.BLUETOOTH_ADMIN",
-        "android.permission.BLUETOOTH_CONNECT",
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT"
