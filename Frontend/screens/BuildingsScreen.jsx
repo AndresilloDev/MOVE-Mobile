@@ -19,7 +19,7 @@ import { Search } from "../components/Search";
 const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
   <TouchableOpacity
     className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
-    onPress={() => navigation.navigate("Classrooms", { building })}
+    onPress={() => navigation.navigate("Spaces", { building })}
   >
     <View>
       <Text className="font-bold mb-2">Nombre: <Text className="font-normal">{building.name}</Text></Text>
@@ -71,7 +71,7 @@ const BuildingsScreen = () => {
   };
 
   const handleEdit = (building) => {
-    navigation.navigate("EditBuilding", { building });
+    navigation.navigate("EditBuilding", { building: building });
   };
 
   const handleDelete = (building) => {

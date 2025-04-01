@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import * as authApi from "../api/auth.api";
+import { login, logout, checkAuth } from "../api/auth.api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -22,13 +22,10 @@ export const AuthProvider = ({ children }) => {
         loadUserData();
     }, []);
 
-    const login = async (user, password) => {
-        console.log("data to send", { user, password });
+    const handleLogin = async (user, password) => {
 
-        const response = await authApi.login({
-            user: formattedUsername, 
-            password
-        });
+        const response = await login(user, password);
+        console.log(response);
         if (response.status === 200) {
             const userData = response.data.user;
             setUser(userData);
@@ -42,9 +39,9 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const logout = async () => {
+    const handleLogout = async () => {
         setUser(null);
-        authApi.logout();
+        await logout();
         await AsyncStorage.removeItem("user");
         await AsyncStorage.removeItem("token");
         return true;
@@ -61,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, updateProfile }}>
+        <AuthContext.Provider value={{ user, handleLogin, logout, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Button } from "react-native";
 import { StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 import { updateBuilding } from "../../api/buildings.api";
 import { useNotification } from "../../context/NotificationContext";
 
 export const EditBuildingScreen = () => {
+    const route = useRoute();
     const navigation = useNavigation();
     const { building } = route.params;
     const [name, setName] = useState(building.name);

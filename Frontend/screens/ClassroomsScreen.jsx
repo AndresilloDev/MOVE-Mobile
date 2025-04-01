@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
@@ -35,7 +35,8 @@ const ClassroomCard = ({ classroom, onEdit, onDelete }) => (
 );
 
 const ClassroomsScreen = () => {
-  const [classrooms, setClassrooms] = useState([]);
+    const route = useRoute();
+    const [classrooms, setClassrooms] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { building } = route.params;
@@ -49,7 +50,7 @@ const ClassroomsScreen = () => {
       try {
           setLoading(true);
           const response = await getSpaces(building._id);
-          setSpaces(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+          setClassrooms(response.data.sort((a, b) => a.name.localeCompare(b.name)));
       } catch (err) {
           getError("Error al obtener los espacios");
       } finally {

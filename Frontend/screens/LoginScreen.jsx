@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import Header from "../components/Header";
 
 const LoginScreen = ( {navigation} ) => {
-  const { login } = useContext(AuthContext);
+  const { handleLogin } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -46,7 +46,7 @@ const LoginScreen = ( {navigation} ) => {
 			<TouchableOpacity
 				className="bg-action-primary rounded-lg px-8 border-lines"
 				style={{ borderWidth: 1.3, paddingVertical: 5, width: "80%" }}
-				onPress={() => login(username, password)}
+				onPress={() => handleLogin(username, password)}
 			>
 				<Text className="text-primary text-lg text-center">Iniciar Sesión</Text>
 

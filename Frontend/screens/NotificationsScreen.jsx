@@ -17,8 +17,8 @@ const NotificationsScreen = () => {
     const fetchNotifications = async () => {
       try {
         setLoading(true);
-        const data = await getUnfiledNotifications();
-        setNotifications(data);
+        const response  = await getUnfiledNotifications();
+        setNotifications(response.data);
       } catch (err) {
         setError("Error al obtener notificaciones");
       } finally {

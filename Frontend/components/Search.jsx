@@ -1,3 +1,6 @@
+import {TextInput, TouchableOpacity, View} from "react-native";
+import Icon from "react-native-vector-icons/Ionicons";
+
 export const Search = ({ searchQuery, setSearchQuery, onSearch }) => {
     return (
         <View className="items-center mt-2 py-2 px-1">

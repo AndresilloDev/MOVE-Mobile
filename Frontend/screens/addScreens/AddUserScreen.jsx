@@ -89,7 +89,7 @@ const AddUser = () => {
     return (
         <View className="flex-1">
             <Image
-                source={require("../assets/bg.png")}
+                source={require("../../assets/bg.png")}
                 className="absolute top-0 left-0 w-full h-full"
                 style={{ width: "600%", height: "100%" }}
                 resizeMode="cover"
