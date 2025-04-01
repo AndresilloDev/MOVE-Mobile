@@ -6,8 +6,8 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import DeviceModal from "./DeviceModal";
-import useBLE from "../useBLE";
+import DeviceModal from "../DeviceModal";
+import useBLE from "../../useBLE";
 
 const AddDeviceScreen = () => {
     const {

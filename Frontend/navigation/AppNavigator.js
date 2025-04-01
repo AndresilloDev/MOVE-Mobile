@@ -1,14 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useContext } from "react";
-import { AuthContext, AuthProvider } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import BottomTabNavigator from "./BottomTabNavigator";
 import StackNavigatorHome from "./StackNavigatorHome";
 
 const Stack = createNativeStackNavigator();
 
 const MainNavigator = () => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
 
   return (
     <NavigationContainer>
@@ -29,8 +28,6 @@ const MainNavigator = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MainNavigator />
-    </AuthProvider>
+    <MainNavigator />
   );
 }

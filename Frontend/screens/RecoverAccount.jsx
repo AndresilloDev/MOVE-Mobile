@@ -36,7 +36,7 @@ const RecoverAccount = ( {navigation} ) => {
       <TouchableOpacity
 				className="bg-action-primary rounded-lg px-8 border-lines"
 				style={{ borderWidth: 1.3, paddingVertical: 5, width: "80%" }}
-				onPress={() => navigation.navigate("CodeVerification")}
+				onPress={() => navigation.replace("CodeVerification")}
 			>
 				<Text className="text-primary text-lg text-center">Enviar Código</Text>
 

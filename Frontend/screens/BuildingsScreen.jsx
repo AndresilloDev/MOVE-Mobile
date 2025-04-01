@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,13 +12,9 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../components/Header";
-
-const buildings = [
-  { id: "1", name: "D4", number_of_devices: 8, number_of_spaces: 7 },
-  { id: "2", name: "D3", number_of_devices: 7, number_of_spaces: 7 },
-  { id: "3", name: "D2", number_of_devices: 10, number_of_spaces: 8 },
-  { id: "4", name: "D1", number_of_devices: 6, number_of_spaces: 6 },
-];
+import { getBuildings, deleteBuilding } from "../api/buildings.api";
+import { useNotification } from "../context/NotificationContext";
+import { Search } from "../components/Search";
 
 const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
   <TouchableOpacity
@@ -27,8 +23,8 @@ const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
   >
     <View>
       <Text className="font-bold mb-2">Nombre: <Text className="font-normal">{building.name}</Text></Text>
-      <Text>Dispositivos Registrados: {building.number_of_devices}</Text>
-      <Text>Aulas Registradas: {building.number_of_spaces}</Text>
+      <Text>Dispositivos Registrados: {building.deviceCount}</Text>
+      <Text>Aulas Registradas: {building.spaceCount}</Text>
     </View>
 
     <View className="flex flex-row space-x-2 items-end">
@@ -43,21 +39,60 @@ const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
 );
 
 const BuildingsScreen = () => {
+  const [buildings, setBuildings] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const navigation = useNavigation();
+  const { getError, getSuccess } = useNotification();
   const [searchQuery, setSearchQuery] = useState("");
 
+  useEffect(() => {
+    fetchBuildings();
+  }, []);
+
+  const fetchBuildings = async () => {
+    try {
+      setLoading(true);
+      const response = await getBuildings();
+      setBuildings(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+    } catch (error) {
+      console.error("Error fetching buildings:", error);
+      getError("Error al cargar los edificios. Por favor, inténtelo de nuevo más tarde.");
+    } finally {
+      setLoading(false);
+    }
+  };
   const filteredBuildings = buildings.filter((building) =>
-    Object.values(building).some((value) =>
-      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    building.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
   const handleEdit = (building) => {
-    Alert.alert("Editar", `Editar información de ${building.name}`);
+    navigation.navigate("EditBuilding", { building });
   };
 
   const handleDelete = (building) => {
-    Alert.alert("Eliminar", `Docencia ${building.name} eliminada`);
+    Alert.alert(
+      "Eliminar Edificio",
+      `¿Estás seguro de que deseas eliminar el edificio "${building.name}"?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: () => {
+            deleteBuilding(building.id);
+            getSuccess(`Edificio "${building.name}" eliminado.`);
+            setBuildings((prev) => prev.filter((b) => b.id !== building.id));
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -79,20 +114,7 @@ const BuildingsScreen = () => {
       </View>
 
       {/* Search Bar */}
-      <View className="items-center mt-2 py-2 px-1">
-        <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
-          <TextInput
-            className="flex-1 h-full pl-3"
-            placeholder="Buscar docencia..."
-            placeholderTextColor={"gray"}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          <TouchableOpacity className="bg-[rgba(222,255,53,0.8)] w-10 h-full justify-center items-center rounded-r-xl">
-            <Icon name="search" size={20} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearch={handleSearch} />
 
       {/* Buildings List */}
       <FlatList

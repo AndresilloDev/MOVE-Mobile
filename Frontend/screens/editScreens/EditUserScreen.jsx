@@ -11,8 +11,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
-import Header from "../components/Header";
-import { updateUser } from "../api/users.api";
+import Header from "../../components/Header";
+import { updateUser } from "../../api/users.api";
 
 const EditUser = ({ route }) => {
     const navigation = useNavigation();

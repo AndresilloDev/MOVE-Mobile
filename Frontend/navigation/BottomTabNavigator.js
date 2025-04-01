@@ -5,17 +5,20 @@ import StackNavigatorNotifications from "./StackNavigatorNotifications";
 import StackNavigatorDevices from "./StackNavigatorDevices";
 import StackNavigatorUsers from "./StackNavigatorUsers";
 import { Image, Alert } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
+    const { user, logout } = useAuth();
+
     const handleLogout = () => {
         Alert.alert(
             "Cerrar sesión",
             "¿Estás seguro que deseas cerrar sesión?",
             [
                 { text: "Cancelar", style: "cancel" },
-                { text: "Cerrar sesión", onPress: () => console.log("Cerrar sesión") },
+                { text: "Cerrar sesión", onPress: () => logout() },
             ]
         );
     };
@@ -40,15 +43,17 @@ export default function BottomTabNavigator() {
                     ),
                 }}
             />
-            <Tab.Screen
-                name="Admins"
-                component={StackNavigatorUsers}
-                options={{
-                    tabBarIcon: () => (
-                        <Image source={require("../assets/icons/personas.png")} className="w-8 h-8" />
-                    ),
-                }}
-            />
+            { user?.isSuperAdmin && (
+                <Tab.Screen
+                    name="Admins"
+                    component={StackNavigatorUsers}
+                    options={{
+                        tabBarIcon: () => (
+                            <Image source={require("../assets/icons/personas.png")} className="w-8 h-8" />
+                        ),
+                    }}
+                />
+            )}
             <Tab.Screen
                 name="Notifications"
                 component={StackNavigatorNotifications}

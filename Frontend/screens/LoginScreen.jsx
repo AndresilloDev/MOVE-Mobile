@@ -39,7 +39,7 @@ const LoginScreen = ( {navigation} ) => {
 				onChangeText={setPassword}
 			/>
 
-			<Text className="w-4/5 text-right text-sm mb-8 underline" onPress={() => navigation.navigate("ForgotPassword")}>
+			<Text className="w-4/5 text-right text-sm mb-8 underline" onPress={() => navigation.replace("ForgotPassword")}>
 				Olvidaste tu contraseña?
 			</Text>
 			

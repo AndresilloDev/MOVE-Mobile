@@ -3,35 +3,32 @@ import { View, Text, Image, TouchableOpacity, TextInput, Modal, StyleSheet } fro
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
-import Header from "../components/Header";
+import Header from "../../components/Header";
+import { useNotification } from "../../context/NotificationContext";
+import { updateSpace } from "../../api/spaces.api";
 
-const EditClassroom = () => {
+const EditSpaceScreen = () => {
   const navigation = useNavigation();
-  const route = useRoute();
+  const { building } = route.params;
   const { classroom } = route.params;
+  const { getError, getSuccess } = useNotification();
+
   const [classroomName, setClassroomName] = useState(classroom.id);
-  const [teaching, setTeaching] = useState("D4");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-
-  const handleSave = () => {
-    if (!classroomName || !teaching) {
-      setModalMessage("Por favor, completa todos los campos.");
-      setIsModalVisible(true);
+  
+  const handleSave = async () => {
+    if (!classroomName) {
+      getError("Por favor, complete todos los campos.");
       return;
+    }  
+  
+    try {
+      await updateSpace(building._id, classroom._id, { name: classroomName });
+      getSuccess("Aula editada correctamente.");
+      navigation.goBack();
     }
-
-    setModalMessage(`Aula ${classroomName} actualizada en ${teaching}`);
-    setIsModalVisible(true);
-  };
-
-  const handleConfirm = () => {
-    setIsModalVisible(false);
-    navigation.goBack();
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+    catch (error) {
+      getError("Error al editar el aula. Por favor, inténtelo de nuevo.");
+    }
   };
 
   return (
@@ -65,14 +62,6 @@ const EditClassroom = () => {
           onChangeText={setClassroomName}
         />
 
-        <Text className="text-lg font-bold mb-2">Docencia</Text>
-        <TextInput
-          className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
-          placeholder="Ej: D4"
-          value={teaching}
-          onChangeText={setTeaching}
-        />
-
         <TouchableOpacity
           className="bg-[rgba(222,255,53,0.8)] h-12 rounded-xl items-center justify-center"
           onPress={handleSave}
@@ -80,39 +69,6 @@ const EditClassroom = () => {
           <Text className="text-lg font-bold">Guardar Cambios</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Modal de Alerta */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={handleCancel}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {modalMessage.includes("actualizada") ? "Éxito" : "Error"}
-            </Text>
-            <Text style={styles.modalMessage}>{modalMessage}</Text>
-            <View style={styles.modalButtonsContainer}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={handleCancel}
-              >
-                <Text style={styles.cancelButtonText}>Cerrar</Text>
-              </TouchableOpacity>
-              {modalMessage.includes("actualizada") && (
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.confirmButton]}
-                  onPress={handleConfirm}
-                >
-                  <Text style={styles.confirmButtonText}>Aceptar</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-      </Modal>
 
       <StatusBar style="dark" />
     </View>
@@ -169,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditClassroom;
+export default EditSpaceScreen;

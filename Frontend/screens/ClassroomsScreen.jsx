@@ -8,18 +8,14 @@ import {
   TextInput,
   Modal,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-
-const classrooms = [
-  { id: "CC11", devices: 1 },
-  { id: "CC12", devices: 2 },
-  { id: "CC13", devices: 1 },
-  { id: "CC14", devices: 1 },
-];
+import { useNotification } from "../context/NotificationContext";
+import { getSpaces, deleteSpace } from "../api/spaces.api";
 
 const ClassroomCard = ({ classroom, onEdit, onDelete }) => (
   <View className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6">
@@ -39,43 +35,59 @@ const ClassroomCard = ({ classroom, onEdit, onDelete }) => (
 );
 
 const ClassroomsScreen = () => {
+  const [classrooms, setClassrooms] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const { building } = route.params;
+  const { getError, getSuccess } = useNotification();
+    
+  useEffect(() => {
+      fetchSpaces();
+  }, [building]);
+
+  const fetchSpaces = async () => {
+      try {
+          setLoading(true);
+          const response = await getSpaces(building._id);
+          setSpaces(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+      } catch (err) {
+          getError("Error al obtener los espacios");
+      } finally {
+          setLoading(false);
+      }
+  };
+
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
-  const [selectedClassroom, setSelectedClassroom] = useState(null);
-
-  let timeoutId; 
 
   const filteredClassrooms = classrooms.filter((classroom) =>
-    classroom.id.toLowerCase().includes(searchQuery.toLowerCase())
+    classroom.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleEdit = (classroom) => {
-    navigation.navigate("EditClassroom", { classroom });
+    navigation.navigate("EditClassroom", { classroom, building });
   };
 
   const handleDelete = (classroom) => {
-    setSelectedClassroom(classroom);
-    setIsDeleteModalVisible(true);
-  };
-
-  const confirmDelete = () => {
-    setIsDeleteModalVisible(false);
-    setIsSuccessModalVisible(true); 
-
-    timeoutId = setTimeout(() => {
-      setIsSuccessModalVisible(false);
-    }, 3000); 
-  };
-
-  const cancelDelete = () => {
-    setIsDeleteModalVisible(false);
-  };
-
-  const handleSuccessOk = () => {
-    setIsSuccessModalVisible(false);
-    clearTimeout(timeoutId);
+    Alert.alert(
+      "Eliminar Aula",
+      `¿Estás seguro de que deseas eliminar el aula ${classroom.name}?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Eliminar",
+          onPress: () => {
+            deleteSpace(building._id, classroom._id)
+            getSuccess(`Aula ${classroom.name} eliminada.`);
+            setClassrooms((prev) => prev.filter((c) => c._id !== classroom._id));
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
@@ -130,12 +142,12 @@ const ClassroomsScreen = () => {
 
       <TouchableOpacity
         className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-        onPress={() => navigation.navigate("AddClassroom")}
+        onPress={() => navigation.navigate("AddClassroom", { building })}
       >
         <Icon name="add" size={30} color="#000" />
       </TouchableOpacity>
 
-      <Modal
+      {/* <Modal
         visible={isDeleteModalVisible}
         transparent={true}
         animationType="fade"
@@ -179,7 +191,7 @@ const ClassroomsScreen = () => {
             </Text>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
 
       <StatusBar style="dark" />
     </View>

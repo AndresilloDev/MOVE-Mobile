@@ -3,52 +3,22 @@ import api from "./base.api";
 const endpoint = "/devices";
 
 export const getDevices = async () => {
-    try {
-        const response = await api.get(endpoint);
-        return response.data;
-    } catch (error) {
-        console.error("getDevices error:", error);
-        return [];
-    }
+    return await api.get(endpoint);
 };
 
 export const getDevice = async (deviceId) => {
-    try {
-        const response = await api.get(`/${endpoint}/${deviceId}`);
-        return response.data;
-    } catch (error) {
-        console.error("getDevice error:", error);
-        return {};
-    }
-}
+    console.log(`${endpoint}/${deviceId}`)
+    return await api.get(`${endpoint}/${deviceId}`);
+};
 
-//Nota: Lógica por implementar (Conexión por Bluetooth)
-export const connectDevice = async (deviceId) => {
-    try {
-        const response = await api.get(`/${endpoint}/${deviceId}/connect`);
-        return response.data;
-    } catch (error) {
-        console.error("connectDevice error:", error);
-        return {};
-    }
+export const connectDevice = async (deviceId, deviceData) => {
+    return await api.post(`${deviceId}/register`, deviceData);
 }
 
 export const updateDevice = async (deviceId, device) => {
-    try {
-        const response = await api.put(`/${endpoint}/${deviceId}`, device);
-        return response.data;
-    } catch (error) {
-        console.error("updateDevice error:", error);
-        return {};
-    }
-}
+    return await api.put(`${endpoint}/${deviceId}`, device);
+};
 
 export const deleteDevice = async (deviceId) => {
-    try {
-        const response = await api.delete(`/${endpoint}/${deviceId}`);
-        return response.data;
-    } catch (error) {
-        console.error("deleteDevice error:", error);
-        return {};
-    }
-}
+    return await api.delete(`${endpoint}/${deviceId}`);
+};

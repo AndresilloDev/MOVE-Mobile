@@ -3,33 +3,34 @@ import { View, Text, Image, TouchableOpacity, TextInput, Modal, StyleSheet } fro
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
-import Header from "../components/Header";
+import Header from "../../components/Header";
+import { useNotification } from "../../context/NotificationContext";
+import { createSpace } from "../../api/spaces.api";
 
-const AddClassroom = () => {
+const AddSpaceScreen = () => {
   const navigation = useNavigation();
   const [classroomName, setClassroomName] = useState("");
-  const [teaching, setTeaching] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const { building } = route.params;
 
-  const handleSave = () => {
-    if (!classroomName || !teaching) {
-      setModalMessage("Por favor, completa todos los campos.");
-      setIsModalVisible(true);
+  const { getError, getSuccess } = useNotification();
+
+  const handleSave = async () => {
+    if (!classroomName) {
+      getError("Por favor, complete todos los campos.");
       return;
     }
-
-    setModalMessage(`Aula ${classroomName} guardada en ${teaching}`);
-    setIsModalVisible(true);
-  };
-
-  const handleConfirm = () => {
-    setIsModalVisible(false);
-    navigation.goBack();
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+    
+    try {
+      const response = await createSpace(building._id, { name: classroomName });
+      if (response.status === 200) {
+        getSuccess("Aula guardada correctamente.");
+        navigation.goBack();
+      } else {
+        getError("Error al guardar el aula. Por favor, inténtelo de nuevo.");
+      }
+    } catch (error) {
+      getError("Error al guardar el aula. Por favor, inténtelo de nuevo.");
+    }
   };
 
   return (
@@ -62,14 +63,6 @@ const AddClassroom = () => {
           onChangeText={setClassroomName}
         />
 
-        <Text className="text-lg font-bold mb-2">Docencia</Text>
-        <TextInput
-          className="h-12 border border-black rounded-xl bg-white px-4 mb-4"
-          placeholder="Ej: D4"
-          value={teaching}
-          onChangeText={setTeaching}
-        />
-
         <TouchableOpacity
           className="bg-[rgba(222,255,53,0.8)] h-12 rounded-xl items-center justify-center"
           onPress={handleSave}
@@ -77,40 +70,6 @@ const AddClassroom = () => {
           <Text className="text-lg font-bold">Guardar</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Modal de Alerta */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={handleCancel}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>
-              {modalMessage.includes("guardada") ? "Éxito" : "Error"}
-            </Text>
-            <Text style={styles.modalMessage}>{modalMessage}</Text>
-            <View style={styles.modalButtonsContainer}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.cancelButton]}
-                onPress={handleCancel}
-              >
-                <Text style={styles.cancelButtonText}>Cerrar</Text>
-              </TouchableOpacity>
-              {modalMessage.includes("guardada") && (
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.confirmButton]}
-                  onPress={handleConfirm}
-                >
-                  <Text style={styles.confirmButtonText}>Aceptar</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-        </View>
-      </Modal>
-
       <StatusBar style="dark" />
     </View>
   );
@@ -166,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddClassroom;
+export default AddSpaceScreen;
