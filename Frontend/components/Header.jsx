@@ -37,7 +37,9 @@ const Header = ({ navigation }) => {
                   className="bg-[rgba(222,255,53,0.8)] w-10 h-10 justify-center items-center rounded-full mr-4 mb-2 border border-action-hover"
                   onPress={() => navigation.navigate("Profile")}
               >
-                <Icon name="person" size={20} color="black" />
+                <Text className="text-black text-lg font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </Text>
               </TouchableOpacity>
           ) : null}
 
