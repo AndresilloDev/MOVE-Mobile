@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, ActivityIndicator } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
+import React, {useEffect, useState} from "react";
+import {ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
+import {StatusBar} from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-import { getUnfiledNotifications } from "../api/notifications.api";
+import {getUnfiledNotifications} from "../api/notifications.api";
 
 const NotificationsScreen = () => {
   const navigation = useNavigation();

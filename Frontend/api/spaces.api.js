@@ -7,29 +7,23 @@ export const getSpaces = async () => {
     return await api.get(endpoint);
 }
 
-//Obtiene un espacio
-export const getSpace = async (buildingId, id) => {
-    return await api.get(`/${endpoint}/${buildingId}/spaces/${id}`);
-}
-
 //Crea un espacio
-export const createSpace = async (buildingId, space) => {
-    return await api.post(`/${endpoint}/${buildingId}/spaces`, space);
+export const createSpace = async (buildingId, name) => {
+    return await api.post(`${endpoint}/${buildingId}/spaces`, name);
 }
 
 //Actualiza un espacio
 export const updateSpace = async (buildingId, id, space) => {
-    return await api.put(`/${endpoint}/${buildingId}/spaces/${id}`, space);
+    return await api.put(`${endpoint}/${buildingId}/spaces/${id}`, space);
 }
 
 //Elimina un espacio;
 //NOTA: El eliminado es lógico, no físico
 //NOTA: No se puede eliminar un espacio si tiene dispositivos
-export const deleteSpace = async (buildingId, id) => {
-    return await api.delete(`/${endpoint}/${buildingId}/spaces/${id}`);
+export const deleteSpace = async (buildingId, spaceId) => {
+    return await api.delete(`${endpoint}/${buildingId}/spaces/${spaceId}`);
 }
 
-//Obtiene la cantidad de dispositivos dentro de un espacio
-export const getSpaceDevices = async (buildingId, id) => {
-    return await api.get(`/${endpoint}/${buildingId}/spaces/${id}/devices`);
+export const getSpacesDevice = async (buildingId) => {
+    return await api.get(`${endpoint}/${buildingId}/spaces`);
 }

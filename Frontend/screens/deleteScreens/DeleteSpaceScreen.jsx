@@ -1,29 +1,28 @@
-import React, {useState} from "react";
-import {Image, Text, TextInput, TouchableOpacity, View} from "react-native";
+import React from "react";
+import {Image, Text, TouchableOpacity, View} from "react-native";
 import {useNavigation, useRoute} from "@react-navigation/native";
-import {updateBuilding} from "../../api/buildings.api";
 import {useNotification} from "../../context/NotificationContext";
 import Header from "../../components/Header";
 import Icon from "react-native-vector-icons/Ionicons";
+import {deleteSpace} from "../../api/spaces.api";
 
-const EditBuildingScreen = () => {
+const DeleteSpaceScreen = () => {
     const route = useRoute();
     const navigation = useNavigation();
-    const { building } = route.params;
-    const [name, setName] = useState(building.name);
+    const { classroom, building } = route.params;
     const { getSuccess, getError } = useNotification();
 
-    const handleEdit = async () => {
+    const handleDelete = async () => {
         try {
-            const response = await updateBuilding(building._id, { name });
+            const response = await deleteSpace(building._id, classroom._id);
             if (response.status === 200) {
-                getSuccess("Edificio editado correctamente.");
+                getSuccess("Edificio eliminado correctamente.");
                 navigation.goBack();
             } else {
-                getError("Error al editar el edificio. Por favor, inténtelo de nuevo más tarde.");
+                getError("Error al eliminar el edificio. Por favor, inténtelo de nuevo más tarde.");
             }
         } catch (error) {
-            getError("Error al editar el edificio. Por favor, inténtelo de nuevo más tarde.");
+            getError("Error al eliminar el edificio. Por favor, inténtelo de nuevo más tarde.");
         }
     };
 
@@ -43,19 +42,17 @@ const EditBuildingScreen = () => {
             <View className="m-4 ml-6 flex-row items-center">
                 <Icon name="home" size={25} color="#000" className="mr-2" />
                 <Icon name="chevron-forward-sharp" size={25} color="#000" className="mr-2" />
-                <Text className="text-xl">Editar Edificio</Text>
+                <Text className="text-xl">{building.name}</Text>
+                <Icon name="chevron-forward-sharp" size={25} color="#000" className="mr-2" />
+                <Text className="text-xl">Eliminar Aula</Text>
             </View>
 
             {/* Contenido central */}
-            <View className="flex-1 items-center justify-center px-4 gap-20">
-                <Text className="text-2xl font-bold mb-4 text-center">Editar Edificio</Text>
-
-                <TextInput
-                    className="min-w-[75%] h-12 border border-gray-300 rounded-lg px-4 mb-6 bg-white"
-                    placeholder="Nombre del Edificio"
-                    value={name}
-                    onChangeText={setName}
-                />
+            <View className="flex-1 items-center justify-center px-4 gap-10">
+                <Text className="text-2xl font-bold mb-4 text-center">Eliminar Aula</Text>
+                <Text>
+                    ¿Estás seguro de que deseas eliminar el aula <Text className="font-bold">{classroom.name}</Text>?
+                </Text>
 
                 <View className="w-[75%] flex-row justify-between gap-4">
                     <TouchableOpacity
@@ -64,12 +61,11 @@ const EditBuildingScreen = () => {
                     >
                         <Text className="text-primary text-lg text-center font-semibold">Cancelar</Text>
                     </TouchableOpacity>
-
                     <TouchableOpacity
                         className="bg-action-primary py-3 rounded-xl flex-[1.2] items-center border border-action-hover"
-                        onPress={handleEdit}
+                        onPress={handleDelete}
                     >
-                        <Text className="text-primary text-lg text-center font-semibold">Guardar</Text>
+                        <Text className="text-primary text-lg text-center font-semibold">Eliminar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -77,4 +73,4 @@ const EditBuildingScreen = () => {
     );
 };
 
-export default EditBuildingScreen;
+export default DeleteSpaceScreen;

@@ -1,20 +1,10 @@
-import React, { useState, useEffect } from "react";
-import {
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    FlatList,
-    TextInput,
-    Modal,
-    StyleSheet,
-    Switch
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
+import React, {useEffect, useState} from "react";
+import {FlatList, Image, Modal, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
+import {StatusBar} from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
-import { getUsers, deleteUser } from "../api/users.api";
+import {deleteUser, getUsers} from "../api/users.api";
 
 const UserCard = ({ user, onEdit, onDelete }) => (
     <View className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6">

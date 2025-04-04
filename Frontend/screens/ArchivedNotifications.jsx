@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Modal, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
+import React, {useState} from "react";
+import {Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
+import {StatusBar} from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
-import Header from "../components/Header"; 
+import Header from "../components/Header";
 import NotificationsScreen from "./NotificationsScreen";
 
 const ArchivedNotifications = ({}) => {

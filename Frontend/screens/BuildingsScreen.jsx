@@ -1,20 +1,13 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  Alert,
-} from "react-native";
+import React, {useCallback, useState} from "react";
+import {FlatList, Image, Text, TouchableOpacity, View,} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { StatusBar } from "expo-status-bar";
-import { useNavigation } from "@react-navigation/native";
+import {StatusBar} from "expo-status-bar";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import Header from "../components/Header";
-import { getBuildings, deleteBuilding } from "../api/buildings.api";
-import { useNotification } from "../context/NotificationContext";
-import { Search } from "../components/Search";
+import {getBuildings} from "../api/buildings.api";
+import {useNotification} from "../context/NotificationContext";
+import {Search} from "../components/Search";
+import Loader from "../components/Loader";
 
 const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
   <TouchableOpacity
@@ -41,14 +34,9 @@ const BuildingCard = ({ building, navigation, onEdit, onDelete }) => (
 const BuildingsScreen = () => {
   const [buildings, setBuildings] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const navigation = useNavigation();
   const { getError, getSuccess } = useNotification();
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    fetchBuildings();
-  }, []);
 
   const fetchBuildings = async () => {
     try {
@@ -62,6 +50,12 @@ const BuildingsScreen = () => {
       setLoading(false);
     }
   };
+
+  useFocusEffect(
+      useCallback(() => {
+        fetchBuildings();
+      }, [])
+  );
   const filteredBuildings = buildings.filter((building) =>
     building.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -75,24 +69,7 @@ const BuildingsScreen = () => {
   };
 
   const handleDelete = (building) => {
-    Alert.alert(
-      "Eliminar Edificio",
-      `¿Estás seguro de que deseas eliminar el edificio "${building.name}"?`,
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Eliminar",
-          onPress: () => {
-            deleteBuilding(building.id);
-            getSuccess(`Edificio "${building.name}" eliminado.`);
-            setBuildings((prev) => prev.filter((b) => b.id !== building.id));
-          },
-        },
-      ]
-    );
+    navigation.navigate("DeleteBuilding", { building: building });
   };
 
   return (
@@ -117,28 +94,33 @@ const BuildingsScreen = () => {
       <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearch={handleSearch} />
 
       {/* Buildings List */}
-      <FlatList
-        data={filteredBuildings}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <BuildingCard
-            building={item}
-            navigation={navigation}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
-        contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
-      />
+      {loading ? (
+          <Loader />
+      ) : (
+          <>
+            <FlatList
+                data={filteredBuildings}
+                keyExtractor={(item) => item._id}
+                renderItem={({item}) => (
+                    <BuildingCard
+                        building={item}
+                        navigation={navigation}
+                        onEdit={() => handleEdit(item)}
+                        onDelete={() => handleDelete(item)}
+                    />
+                )}
+                contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+            />
 
-      {/* Add Buildings Button */}
-      <TouchableOpacity
-        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-        onPress={() => navigation.navigate("AddBuilding")}
-      >
-        <Icon name="add" size={30} color="#000" />
-      </TouchableOpacity>
-
+            {/* Add Buildings Button */}
+            <TouchableOpacity
+                className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
+                onPress={() => navigation.navigate("AddBuilding")}
+            >
+              <Icon name="add" size={30} color="#000" />
+            </TouchableOpacity>
+          </>
+      )}
       <StatusBar style="dark" />
     </View>
   );

@@ -1,18 +1,10 @@
-import React, { useState } from "react";
-import {
-    View,
-    Text,
-    Image,
-    TouchableOpacity,
-    TextInput,
-    Modal,
-    StyleSheet,
-} from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
+import React, {useState} from "react";
+import {Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native";
+import {useNavigation} from "@react-navigation/native";
+import {StatusBar} from "expo-status-bar";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../../components/Header";
-import { updateUser } from "../../api/users.api";
+import {updateUser} from "../../api/users.api";
 
 const EditUser = ({ route }) => {
     const navigation = useNavigation();

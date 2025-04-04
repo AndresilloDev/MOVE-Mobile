@@ -1,12 +1,6 @@
-import React, { useState, useCallback } from "react";
-import {
-    SafeAreaView,
-    StyleSheet,
-    Text, TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import DeviceModal from "../DeviceModal";
+import React, {useCallback, useState} from "react";
+import {SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View,} from "react-native";
+import ConnectDeviceScreen from "../ConnectDeviceScreen";
 import useBLE from "../../useBLE";
 
 const AddDeviceScreen = () => {
@@ -39,7 +33,7 @@ const AddDeviceScreen = () => {
             <View style={styles.heartRateTitleWrapper}>
                 {connectedDevice ? (
                     <>
-                        <Text style={styles.heartRateTitleText}>ME CONECTE A {allDevices[0].name}</Text>
+                        <Text style={styles.heartRateTitleText}>CONECTADO A {allDevices[0].name}</Text>
                         <TextInput
                             className="w-4/5 h-10 border border-gray-500 rounded-lg mb-8 p-2 bg-white"
                             placeholder="SSID de la red"
@@ -56,14 +50,14 @@ const AddDeviceScreen = () => {
                         <TouchableOpacity
                             className="bg-action-primary rounded-lg px-8 border-lines"
                             style={{ borderWidth: 1.3, paddingVertical: 5, width: "80%" }}
-                            onPress={() => sendWifiCredentials(ssid, password)}
+                            onPress={() => sendWifiCredentials(ssid, password || "")} // Enviar contraseña incluso si está vacía
                         >
                             <Text className="text-primary text-lg text-center">Enviar</Text>
                         </TouchableOpacity>
                     </>
                 ) : (
                     <Text style={styles.heartRateTitleText}>
-                        Please Connect to a Heart Rate Monitor
+                        Porfavor conecta el dispositivo
                     </Text>
                 )}
             </View>
@@ -78,7 +72,7 @@ const AddDeviceScreen = () => {
                     {connectedDevice ? "Disconnect" : "Connect"}
                 </Text>
             </TouchableOpacity>
-            <DeviceModal
+            <ConnectDeviceScreen
                 closeModal={toggleModal}
                 visible={isModalVisible}
                 connectToPeripheral={connectToDevice}

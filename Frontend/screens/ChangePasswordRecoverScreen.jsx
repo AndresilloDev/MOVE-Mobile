@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import { AuthContext } from "../context/AuthContext";
+import React, {useContext, useState} from "react";
+import {Image, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {AuthContext} from "../context/AuthContext";
 import Header from "../components/Header";
 
 const ChangePasswordRecoverScreen = ({navigation}) => {

@@ -1,5 +1,5 @@
-import { ScrollView, Text, View, Image, Dimensions } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import {Dimensions, Image, ScrollView, Text, View} from "react-native";
+import {LineChart} from "react-native-chart-kit";
 import SensorCard from "../components/SensorCard";
 import Header from "../components/Header";
 import Icon from "react-native-vector-icons/Ionicons";

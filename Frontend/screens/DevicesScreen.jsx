@@ -1,13 +1,5 @@
-import { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  TextInput,
-  Alert,
-} from "react-native";
+import {useState} from "react";
+import {Alert, FlatList, Image, Text, TextInput, TouchableOpacity, View,} from "react-native";
 import Header from "../components/Header";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -118,7 +110,7 @@ const DevicesScreen = ({ navigation }) => {
       {/* Add Device Button */}
       <TouchableOpacity
         className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-        onPress={() => navigation.navigate("AddDevice")}
+        onPress={() => navigation.navigate("ConnectDevice")}
       >
         <Icon name="add" size={30} color="#000" />
       </TouchableOpacity>

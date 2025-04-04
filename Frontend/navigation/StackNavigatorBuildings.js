@@ -1,11 +1,13 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BuildingsScreen from "../screens/BuildingsScreen";
-import SpacesScreen from "../screens/ClassroomsScreen";
+import SpacesScreen from "../screens/SpacesScreen";
 import AddSpaceScreen from "../screens/addScreens/AddSpaceScreen";
 import EditSpaceScreen from "../screens/editScreens/EditSpaceScreen";
 import AddBuildingScreen from "../screens/addScreens/AddBuildingScreen";
 import EditBuildingScreen from "../screens/editScreens/EditBuildingScreen";
+import DeleteBuildingScreen from "../screens/deleteScreens/DeleteBuildingScreen";
+import DeleteSpaceScreen from "../screens/deleteScreens/DeleteSpaceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,11 @@ export default function StackNavigatorBuildings() {
                 options={{ headerShown: false }}
             />
             <Stack.Screen
+                name="DeleteBuilding"
+                component={DeleteBuildingScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
                 name="Spaces"
                 component={SpacesScreen}
                 options={{ headerShown: false }}
@@ -40,6 +47,11 @@ export default function StackNavigatorBuildings() {
             <Stack.Screen
                 name="EditSpace"
                 component={EditSpaceScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="DeleteSpace"
+                component={DeleteSpaceScreen}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>
