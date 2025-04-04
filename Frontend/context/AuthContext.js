@@ -3,6 +3,7 @@ import {checkAuth, login, logout} from "../api/auth.api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {useNotification} from "./NotificationContext";
 import {useNavigationContainerRef} from "@react-navigation/native";
+import {updateUser} from "../api/users.api";
 
 export const AuthContext = createContext();
 
@@ -79,6 +80,7 @@ export const AuthProvider = ({ children }) => {
 
     const updateProfile = async (user) => {
         try {
+            await updateUser(user);
             setUser(user);
             await AsyncStorage.setItem("user", JSON.stringify(user));
             return true;
