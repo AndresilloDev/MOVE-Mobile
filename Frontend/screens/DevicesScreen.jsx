@@ -1,20 +1,12 @@
-import {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {Alert, FlatList, Image, Text, TextInput, TouchableOpacity, View,} from "react-native";
 import Header from "../components/Header";
 import Icon from "react-native-vector-icons/Ionicons";
-
-const devices = [
-  { id: "246565", name: "D1 - CC9", room: "CC9", teaching: "D1" },
-  { id: "246566", name: "D2 - CC10", room: "CC10", teaching: "D2" },
-  { id: "246567", name: "D3 - CC11", room: "CC11", teaching: "D3" },
-  { id: "246568", name: "D4 - CC11", room: "CC11", teaching: "D4" },
-  { id: "246569", name: "D5 - CC12", room: "CC12", teaching: "D5" },
-  { id: "246570", name: "D6 - CC13", room: "CC13", teaching: "D1" },
-  { id: "246571", name: "D7 - CC14", room: "CC14", teaching: "D2" },
-  { id: "246572", name: "D8 - CC15", room: "CC15", teaching: "D3" },
-  { id: "246573", name: "D9 - CC16", room: "CC16", teaching: "D4" },
-  { id: "246574", name: "D10 - CC17", room: "CC17", teaching: "D5" },
-];
+import {Search} from "../components/Search";
+import {useFocusEffect, useNavigation} from "@react-navigation/native";
+import {useNotification} from "../context/NotificationContext";
+import Loader from "../components/Loader";
+import {getDevices} from "../api/devices.api";
 
 const DeviceCard = ({ device, navigation, onEdit, onDelete }) => (
   <TouchableOpacity
@@ -22,10 +14,10 @@ const DeviceCard = ({ device, navigation, onEdit, onDelete }) => (
     onPress={() => navigation.navigate("SelectedDevice", { device })}
   >
     <View>
-      <Text className="font-bold mb-2">Dispositivo: #{device.id}</Text>
+      <Text className="font-bold mb-2">Dispositivo: #{device._id}</Text>
       <Text className="font-bold">Nombre: <Text className="font-normal">{device.name}</Text></Text>
-      <Text>Aula: {device.room}</Text>
-      <Text>Docencia: {device.teaching}</Text>
+      <Text>Aula: {device.space ? device.space.name : 'Sin Aula'}</Text>
+      <Text>Docencia: {device.building ? device.building.name : 'Sin Edificio'}</Text>
     </View>
 
     <View className="flex flex-row space-x-2 items-end">
@@ -39,21 +31,47 @@ const DeviceCard = ({ device, navigation, onEdit, onDelete }) => (
   </TouchableOpacity>
 );
 
-const DevicesScreen = ({ navigation }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+const DevicesScreen = () => {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
+    const { getError, getSuccess } = useNotification();
+    const [devices, setDevices] = useState([]);
 
-  const filteredDevices = devices.filter((device) =>
-    Object.values(device).some((value) =>
-      value.toLowerCase().includes(searchQuery.toLowerCase())
+    const fetchDevices = async () => {
+        try {
+            setLoading(true);
+            const response = await getDevices();
+            setDevices(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+        } catch (error) {
+            console.error("Error fetching buildings:", error);
+            getError("Error al cargar los edificios. Por favor, inténtelo de nuevo más tarde.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchDevices();
+        }, [])
+    );
+
+    const filteredDevices = devices.filter((device) =>
+        device.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
-  );
+
+    const handleSearch = (text) => {
+        setSearchQuery(text);
+    };
 
   const handleEdit = (device) => {
-    Alert.alert("Editar", `Editar información de ${device.name}`);
+      navigation.navigate("EditDevice", { device: device });
+
   };
 
   const handleDelete = (device) => {
-    Alert.alert("Eliminar", `Dispositivo ${device.name} eliminado`);
+      navigation.navigate("DeleteDevice", { device: device });
   };
 
   return (
@@ -74,46 +92,37 @@ const DevicesScreen = ({ navigation }) => {
         <Text className="text-xl">Dispositivos</Text>
       </View>
 
-      {/* Search Bar */}
-      <View className="items-center mt-2 py-2 px-1">
-        <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
-          <TextInput
-            className="flex-1 h-full pl-3"
-            placeholder="Buscar dispositivo..."
-            placeholderTextColor={"gray"}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          <TouchableOpacity
-            className="bg-[rgba(222,255,53,0.8)] w-10 h-full justify-center items-center rounded-r-xl"
-          >
-            <Icon name="search" size={20} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
+        {/* Search Bar */}
+        <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearch={handleSearch} />
 
-      {/* Devices List */}
-      <FlatList
-        data={filteredDevices}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <DeviceCard
-            device={item}
-            navigation={navigation}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        )}
-        contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
-      />
+        {loading ? (
+            <Loader />
+        ) : (
+            <>
+                {/* Devices List */}
+                <FlatList
+                    data={filteredDevices}
+                    keyExtractor={(item) => item._id}
+                    renderItem={({ item }) => (
+                        <DeviceCard
+                            device={item}
+                            navigation={navigation}
+                            onEdit={() => handleEdit(item)}
+                            onDelete={() => handleDelete(item)}
+                        />
+                    )}
+                    contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
+                />
 
-      {/* Add Device Button */}
-      <TouchableOpacity
-        className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-        onPress={() => navigation.navigate("ConnectDevice")}
-      >
-        <Icon name="add" size={30} color="#000" />
-      </TouchableOpacity>
+                {/* Add Device Button */}
+                <TouchableOpacity
+                    className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
+                    onPress={() => navigation.navigate("ConnectDevice")}
+                >
+                    <Icon name="add" size={30} color="#000" />
+                </TouchableOpacity>
+            </>
+        )};
     </View>
   );
 };
