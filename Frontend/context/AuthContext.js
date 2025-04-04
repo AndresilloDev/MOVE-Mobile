@@ -1,12 +1,17 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { login, logout, checkAuth } from "../api/auth.api";
+import {createContext, useContext, useEffect, useState} from "react";
+import {checkAuth, login, logout} from "../api/auth.api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {useNotification} from "./NotificationContext";
+import {useNavigationContainerRef} from "@react-navigation/native";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const { getSuccess, getError } = useNotification();
+    const navigationRef = useNavigationContainerRef();
 
+    /*
     useEffect(() => {
         const loadUserData = async () => {
             try {
@@ -22,20 +27,45 @@ export const AuthProvider = ({ children }) => {
         loadUserData();
     }, []);
 
-    const handleLogin = async (user, password) => {
+     */
 
-        const response = await login(user, password);
-        console.log(response);
-        if (response.status === 200) {
-            const userData = response.data.user;
-            setUser(userData);
-            await AsyncStorage.setItem("user", JSON.stringify(userData));
-            await AsyncStorage.setItem("token", response.data.token);   
-            return userData;
-        } else {
+
+    /*
+
+     */
+    useEffect(() => {
+        const validateToken = async () => {
+            try {
+                await checkAuth();
+            } catch (error) {
+                console.log("Token inválido o expirado, cerrando sesión");
+                await AsyncStorage.removeItem("token");
+                await AsyncStorage.removeItem("user");
+                setUser(null);
+            }
+        };
+
+        return navigationRef.addListener("state", validateToken);
+    }, [navigationRef]);
+
+    const handleLogin = async (user, password) => {
+        if (!user || !password) {
+            getError("Todos los campos son obligatorios");
+            return;
+        }
+        try {
+            const response = await login(user, password);
+            if (response.status === 200 && response.data.user) {
+                setUser(response.data.user);
+                await AsyncStorage.setItem("user", JSON.stringify(response.data.user));
+                await AsyncStorage.setItem("token", response.data.token);
+                getSuccess("Inicio de sesión exitoso");
+            }
+        } catch (error) {
             setUser(null);
             await AsyncStorage.removeItem("user");
-            return false;
+            getError("Usuario o contraseña incorrectos");
+
         }
     };
 
@@ -58,7 +88,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, handleLogin, logout, updateProfile }}>
+        <AuthContext.Provider value={{ user, handleLogin, handleLogout, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );

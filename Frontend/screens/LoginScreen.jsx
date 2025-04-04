@@ -35,17 +35,17 @@ const LoginScreen = ( {navigation} ) => {
 				className="w-4/5 h-10 border border-gray-500 rounded-lg mb-2 p-2 bg-white"
 				placeholder="Contraseña"
 				placeholderTextColor="#606266"
+				autoCapitalize="none"
 				secureTextEntry
 				onChangeText={setPassword}
 			/>
 
-			<Text className="w-4/5 text-right text-sm mb-8 underline" onPress={() => navigation.replace("ForgotPassword")}>
+			<Text className="w-4/5 text-right text-sm mb-4 underline" onPress={() => navigation.replace("ForgotPassword")}>
 				Olvidaste tu contraseña?
 			</Text>
 			
 			<TouchableOpacity
-				className="bg-action-primary rounded-lg px-8 border-lines"
-				style={{ borderWidth: 1.3, paddingVertical: 5, width: "80%" }}
+				className="bg-action-primary rounded-lg px-8 border border-action-hover py-1 w-[80%]"
 				onPress={() => handleLogin(username, password)}
 			>
 				<Text className="text-primary text-lg text-center">Iniciar Sesión</Text>

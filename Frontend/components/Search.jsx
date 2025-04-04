@@ -7,7 +7,7 @@ export const Search = ({ searchQuery, setSearchQuery, onSearch }) => {
             <View className="flex-row items-center w-11/12 h-10 border border-black rounded-xl bg-white">
                 <TextInput
                     className="flex-1 h-full pl-3"
-                    placeholder="Buscar docencia..."
+                    placeholder="Buscar..."
                     placeholderTextColor={"gray"}
                     value={searchQuery}
                     onChangeText={setSearchQuery}

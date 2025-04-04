@@ -1,5 +1,5 @@
 import React from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import BuildingsScreen from "../screens/BuildingsScreen";
 import SpacesScreen from "../screens/SpacesScreen";
 import AddSpaceScreen from "../screens/addScreens/AddSpaceScreen";

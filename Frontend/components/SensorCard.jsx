@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import Svg, { Path, Circle } from "react-native-svg";
+import {useState} from "react";
+import {Image, Text, TouchableOpacity, View} from "react-native";
+import Svg, {Circle, Path} from "react-native-svg";
 
 import SettingIcon from "../assets/icons/settings.png";
 import NotificationIcon from "../assets/icons/notificacion.png";

@@ -1,32 +1,21 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import StackNavigatorBuildings from "./StackNavigatorBuildings";
 import StackNavigatorNotifications from "./StackNavigatorNotifications";
 import StackNavigatorDevices from "./StackNavigatorDevices";
 import StackNavigatorUsers from "./StackNavigatorUsers";
-import { Image, Alert } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import {Image} from "react-native";
+import {useAuth} from "../context/AuthContext";
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
-    const { user, logout } = useAuth();
-
-    const handleLogout = () => {
-        Alert.alert(
-            "Cerrar sesión",
-            "¿Estás seguro que deseas cerrar sesión?",
-            [
-                { text: "Cancelar", style: "cancel" },
-                { text: "Cerrar sesión", onPress: () => logout() },
-            ]
-        );
-    };
+    const { user } = useAuth();
 
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen
-                name="Devices"
+                name="DevicesTab"
                 component={StackNavigatorDevices}
                 options={{
                     tabBarIcon: () => (
@@ -35,7 +24,7 @@ export default function BottomTabNavigator() {
                 }}
             />
             <Tab.Screen
-                name="Buildings"
+                name="BuildingsTab"
                 component={StackNavigatorBuildings}
                 options={{
                     tabBarIcon: () => (
@@ -43,9 +32,9 @@ export default function BottomTabNavigator() {
                     ),
                 }}
             />
-            { user?.isSuperAdmin && (
+            { user?.isAdmin && (
                 <Tab.Screen
-                    name="Admins"
+                    name="AdminsTab"
                     component={StackNavigatorUsers}
                     options={{
                         tabBarIcon: () => (
@@ -55,7 +44,7 @@ export default function BottomTabNavigator() {
                 />
             )}
             <Tab.Screen
-                name="Notifications"
+                name="NotificationsTab"
                 component={StackNavigatorNotifications}
                 options={{
                     tabBarIcon: () => (

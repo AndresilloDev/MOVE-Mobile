@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
-import { BleManager } from "react-native-ble-plx";
-import { PermissionsAndroid, Platform } from "react-native";
+import {useMemo, useState} from "react";
+import {BleManager} from "react-native-ble-plx";
+import {PermissionsAndroid, Platform} from "react-native";
 import * as ExpoDevice from "expo-device";
 import base64 from "react-native-base64"
 

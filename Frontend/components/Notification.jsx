@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Animated, StyleSheet } from "react-native";
+import React, {useEffect, useState} from "react";
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
 const severityIcons = {

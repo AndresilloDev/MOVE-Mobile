@@ -56,6 +56,7 @@ const BuildingsScreen = () => {
         fetchBuildings();
       }, [])
   );
+
   const filteredBuildings = buildings.filter((building) =>
     building.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
