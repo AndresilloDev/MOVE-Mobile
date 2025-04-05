@@ -3,10 +3,14 @@ import api from "./base.api";
 const endpoint = "/buildings";
 
 //Obtiene todos los espacios
-export const getSpaces = async () => {
-    return await api.get(endpoint);
+export const getSpaces = async (buildingId) => {
+    return await api.get(`${endpoint}/${buildingId}/spaces`);
 }
 
+//Obtiene un espacio
+export const getSpace = async (buildingId, id) => {
+    return await api.get(`${endpoint}/${buildingId}/spaces/${id}`);
+}
 //Crea un espacio
 export const createSpace = async (buildingId, name) => {
     return await api.post(`${endpoint}/${buildingId}/spaces`, name);

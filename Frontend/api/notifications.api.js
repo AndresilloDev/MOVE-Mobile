@@ -30,3 +30,7 @@ export const createNotification = async (notification) => {
 export const fileNotification = async (notificationId) => {
     return await api.put(`${endpoint}/filed/${notificationId}`);
 };
+
+export const updateNotificationImage = async (data) => {
+    return await api.put(`${endpoint}/image`, data);
+};

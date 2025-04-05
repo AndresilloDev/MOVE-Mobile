@@ -2,7 +2,6 @@ import {Image, Platform, Text, TouchableOpacity, View} from "react-native";
 import React, {useContext} from "react";
 import {useRoute} from "@react-navigation/native"; // Importar el hook para obtener la ruta actual
 import {AuthContext} from "../context/AuthContext";
-import Icon from "react-native-vector-icons/Ionicons";
 
 const Header = ({ navigation }) => {
   const { user } = useContext(AuthContext);
