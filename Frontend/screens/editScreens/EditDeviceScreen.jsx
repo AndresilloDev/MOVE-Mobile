@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Header from "../../components/Header";
 import Icon from "react-native-vector-icons/Ionicons";
 import { getBuildings } from "../../api/buildings.api";
-import {getSpacesDevice} from "../../api/spaces.api";
+import { getSpacesDevice } from "../../api/spaces.api";
 import { updateDevice } from "../../api/devices.api";
 import { useNotification } from "../../context/NotificationContext";
 
@@ -14,6 +14,7 @@ const EditDeviceScreen = () => {
     const navigation = useNavigation();
     const { device } = route.params;
     const [name, setName] = useState(device.name || "");
+    const [buildingId, setBuildingId] = useState(device.building?._id || "");
     const [buildingName, setBuildingName] = useState(device.building?.name || "");
     const [spaceName, setSpaceName] = useState(device.space?.name || "");
 
@@ -23,29 +24,42 @@ const EditDeviceScreen = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const buildingData = await getBuildings();
-                setBuildings(buildingData.data.sort((a, b) => a.name.localeCompare(b.name)));
+            const buildingData = await getBuildings();
+            const sortedBuildings = buildingData.data.sort((a, b) => a.name.localeCompare(b.name));
+            setBuildings(sortedBuildings);
 
-                if (device.buildingId) {
-                    const spaceData = await getSpacesDevice(device.buildingId);
-                    setSpaces(spaceData.data.sort((a, b) => a.name.localeCompare(b.name)));
+            if (device.building?._id) {
+                const spaceData = await getSpacesDevice(device.building._id);
+                const sortedSpaces = spaceData.data.sort((a, b) => a.name.localeCompare(b.name));
+                setSpaces(sortedSpaces);
+
+                if (device.space?.name) {
+                    const existsInSpaces = sortedSpaces.some((s) => s.name === device.space.name);
+                    if (existsInSpaces) {
+                        setSpaceName(device.space.name);
+                    }
                 }
-            } catch (error) {
-                console.error("Error loading data", error);
             }
         };
         fetchData();
-    }, [device.buildingId]);
+    }, []);
 
-    const fetchSpaces = async (buildingId) => {
+    const fetchSpaces = async (buildingId, autoSelect = true) => {
         try {
             if (!buildingId) {
                 setSpaces([]);
                 return;
             }
             const response = await getSpacesDevice(buildingId);
-            setSpaces(response.data.sort((a, b) => a.name.localeCompare(b.name)));
+            const sortedSpaces = response.data.sort((a, b) => a.name.localeCompare(b.name));
+            setSpaces(sortedSpaces);
+
+            if (autoSelect && device.space?.name) {
+                const existsInSpaces = sortedSpaces.some((s) => s.name === device.space.name);
+                if (existsInSpaces) {
+                    setSpaceName(device.space.name);
+                }
+            }
         } catch (error) {
             console.error("Error fetching spaces:", error);
         }
@@ -87,7 +101,7 @@ const EditDeviceScreen = () => {
                 <Text className="text-xl">Editar Dispositivo</Text>
             </View>
 
-            <View className="flex-1 items-center justify-center px-4 gap-20">
+            <View className="flex-1 items-center justify-center px-4">
                 <Text className="text-2xl font-bold mb-4 text-center">Editar Dispositivo</Text>
 
                 <TextInput
@@ -103,12 +117,15 @@ const EditDeviceScreen = () => {
                         selectedValue={buildingName}
                         onValueChange={(itemValue) => {
                             setBuildingName(itemValue);
-                            setSpaceName("");
-                            const selectedBuilding = buildings.find((b) => b.name === itemValue);
-                            if (selectedBuilding) {
-                                fetchSpaces(selectedBuilding._id);
-                            } else {
-                                setSpaces([]);
+                            if (itemValue !== buildingName) {
+                                setBuildingId(itemValue);
+                                setSpaceName(""); // solo borramos si el edificio cambió
+                                const selectedBuilding = buildings.find((b) => b.name === itemValue);
+                                if (selectedBuilding) {
+                                    fetchSpaces(selectedBuilding._id);
+                                } else {
+                                    setSpaces([]);
+                                }
                             }
                         }}
                     >
@@ -120,7 +137,7 @@ const EditDeviceScreen = () => {
                 </View>
 
                 {/* Select de Aula */}
-                <View className="w-[75%] bg-white border border-gray-300 rounded-lg mb-6">
+                <View className="w-[75%] bg-white border border-gray-300 rounded-lg mb-4">
                     <Picker
                         selectedValue={spaceName}
                         enabled={spaces.length > 0}
@@ -128,7 +145,7 @@ const EditDeviceScreen = () => {
                     >
                         <Picker.Item label="Seleccionar aula" value="" />
                         {spaces.map((space) => (
-                            <Picker.Item key={space._id || space.id} label={space.name} value={space.name} />
+                            <Picker.Item key={space._id} label={space.name} value={space.name} />
                         ))}
                     </Picker>
                 </View>

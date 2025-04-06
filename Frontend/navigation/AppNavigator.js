@@ -16,8 +16,7 @@ const MainNavigator = () => {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-        }}
-      >
+        }}>
         {user ? (
             <>
                 <Stack.Screen name="User" component={BottomTabNavigator} />

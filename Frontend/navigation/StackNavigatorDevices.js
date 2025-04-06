@@ -5,6 +5,7 @@ import AddDeviceScreen from "../screens/addScreens/AddDeviceScreen";
 import DevicesScreen from "../screens/DevicesScreen";
 import ConnectDeviceScreen from "../screens/ConnectDeviceScreen";
 import EditDeviceScreen from "../screens/editScreens/EditDeviceScreen";
+import DeleteDeviceScreen from "../screens/deleteScreens/DeleteDeviceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +25,11 @@ export default function StackNavigatorDevices() {
             <Stack.Screen
                 name="EditDevice"
                 component={EditDeviceScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="DeleteDevice"
+                component={DeleteDeviceScreen}
                 options={{ headerShown: false }}
             />
             <Stack.Screen

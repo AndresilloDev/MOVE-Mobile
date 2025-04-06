@@ -11,13 +11,12 @@ import {getDevices} from "../api/devices.api";
 const DeviceCard = ({ device, navigation, onEdit, onDelete }) => (
   <TouchableOpacity
     className="bg-white p-4 rounded-lg shadow-md flex-row justify-between mb-4 mx-6"
-    onPress={() => navigation.navigate("SelectedDevice", { device })}
-  >
+    onPress={() => navigation.navigate("SelectedDevice", { device })}>
     <View>
-      <Text className="font-bold mb-2">Dispositivo: #{device._id}</Text>
-      <Text className="font-bold">Nombre: <Text className="font-normal">{device.name}</Text></Text>
-      <Text>Aula: {device.space ? device.space.name : 'Sin Aula'}</Text>
-      <Text>Docencia: {device.building ? device.building.name : 'Sin Edificio'}</Text>
+        <Text className="font-bold mb-2">Dispositivo: #{device._id}</Text>
+        <Text className="font-bold">Nombre: <Text className="font-normal">{device.name}</Text></Text>
+        <Text className="font-bold">Docencia: <Text className="font-normal">{device.building ? device.building.name : "Sin Edificio"}</Text></Text>
+        <Text className="font-bold">Aula: <Text className="font-normal">{device.space ? device.space.name : "Sin Aula"}</Text></Text>
     </View>
 
     <View className="flex flex-row space-x-2 items-end">
@@ -44,7 +43,6 @@ const DevicesScreen = () => {
             const response = await getDevices();
             setDevices(response.data.sort((a, b) => a.name.localeCompare(b.name)));
         } catch (error) {
-            console.error("Error fetching buildings:", error);
             getError("Error al cargar los edificios. Por favor, inténtelo de nuevo más tarde.");
         } finally {
             setLoading(false);
@@ -85,21 +83,18 @@ const DevicesScreen = () => {
 
       <Header navigation={navigation} />
 
-      {/* Breadcrumb Navigation */}
       <View className="m-4 ml-6 flex-row items-center">
         <Icon className="mr-2" name="home" size={25} color="#000" />
         <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
-        <Text className="text-xl">Dispositivos</Text>
+          <Text className="text-xl">Dispositivos</Text>
       </View>
 
-        {/* Search Bar */}
         <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} onSearch={handleSearch} />
 
         {loading ? (
-            <Loader />
+            <Loader/>
         ) : (
             <>
-                {/* Devices List */}
                 <FlatList
                     data={filteredDevices}
                     keyExtractor={(item) => item._id}
@@ -114,15 +109,13 @@ const DevicesScreen = () => {
                     contentContainerStyle={{ paddingTop: 20, paddingBottom: 20 }}
                 />
 
-                {/* Add Device Button */}
                 <TouchableOpacity
                     className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-                    onPress={() => navigation.navigate("ConnectDevice")}
-                >
+                    onPress={() => navigation.navigate("ConnectDevice")}>
                     <Icon name="add" size={30} color="#000" />
                 </TouchableOpacity>
             </>
-        )};
+        )}
     </View>
   );
 };
