@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import api from './base.api';
 
 const endpoint = '/sensorData';
-const SOCKET_URL = 'http://192.168.1.85:3000';
+const SOCKET_URL = 'http://192.168.100.7:3000';
 
 // Create socket connection
 const socket = io(SOCKET_URL);

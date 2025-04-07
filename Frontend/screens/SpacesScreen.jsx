@@ -63,11 +63,11 @@ const SpacesScreen = () => {
     };
 
     const handleEdit = (classroom) => {
-        navigation.navigate("EditSpace", { classroom: classroom, building: building });
+        navigation.navigate("EditSpace", { classroom: classroom, building: building, refresh: true});
     };
 
     const handleDelete = (classroom) => {
-        navigation.navigate("DeleteSpace", { classroom: classroom, building: building });
+        navigation.navigate("DeleteSpace", { classroom: classroom, building: building, refresh: true });
     };
 
     return (
@@ -113,7 +113,7 @@ const SpacesScreen = () => {
 
                     <TouchableOpacity
                         className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-                        onPress={() => navigation.navigate("AddSpace", { building: building })}
+                        onPress={() => navigation.navigate("AddSpace", { building: building, refresh: true })}
                     >
                         <Icon name="add" size={30} color="#000" />
                     </TouchableOpacity>
