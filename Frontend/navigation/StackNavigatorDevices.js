@@ -13,7 +13,7 @@ export default function StackNavigatorDevices() {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="Devices"
+                name="DevicesList"
                 component={DevicesScreen}
                 options={{ headerShown: false }}
             />

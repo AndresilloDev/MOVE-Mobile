@@ -15,7 +15,7 @@ export default function StackNavigatorBuildings() {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="Buildings"
+                name="BuildingsList"
                 component={BuildingsScreen}
                 options={{ headerShown: false }}
             />

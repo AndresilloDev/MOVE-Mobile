@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import React, {useContext, useState} from "react";
 import {Image, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {AuthContext} from "../context/AuthContext";
 import Header from "../components/Header";
@@ -9,15 +9,14 @@ const LoginScreen = ( {navigation} ) => {
   const [password, setPassword] = useState("");
 
   return (
-    <View className="flex-1">
-      	<Image
-            source={require("../assets/bg.png")} 
-            className="absolute top-0 left-0 w-fill h-full" 
-            style={{ width: "600%", height: "100%"}}
-            resizeMode="cover" 
-      	/>
+	  <View className="flex-1 bg-gray-100">
+		  <Image
+			  source={require("../assets/bg.png")}
+			  className="absolute top-0 left-0 w-full h-full"
+			  style={{ width: "600%", height: "100%" }}
+			  resizeMode="cover"/>
 
-        <Header navigation={navigation} />
+		  <Header navigation={navigation} />
 
 		<View className="mt-40 items-center justify-center">
 

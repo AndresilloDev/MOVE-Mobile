@@ -2,7 +2,8 @@ import io from 'socket.io-client';
 import api from './base.api';
 
 const endpoint = '/sensorData';
-const SOCKET_URL = 'http://192.168.1.85:3000';
+//const SOCKET_URL = 'http://move-api-env.eba-jjywtyd3.us-east-1.elasticbeanstalk.com/api';
+const SOCKET_URL = 'http://192.168.1.85:3000/api';
 
 // Create socket connection
 const socket = io(SOCKET_URL);

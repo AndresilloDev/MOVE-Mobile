@@ -4,10 +4,27 @@ import { useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import Header from "../components/Header";
 import SensorCard from "../components/SensorCard";
-import { getDeviceSensors } from "../api/sensorData.api";
-import SensorChartScreen from "../components/SensorChartScreen";
+import {getAllSensorDataInRange, getDeviceSensors} from "../api/sensorData.api";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Loader from "../components/Loader";
+import {LineChart} from "react-native-chart-kit";
+
+const SENSOR_COLORS = {
+    temperature: "#FF5733",
+    humidity: "#33A1FF",
+    co2: "#5733FF",
+    light: "#FFD133",
+    sound: "#33FF57"
+};
+
+const SENSOR_UNITS = {
+    temperature: '°C',
+    humidity: '%',
+    co2: 'ppm',
+    light: 'lux',
+    sound: 'dB'
+};
+
 
 const SENSOR_ORDER = ['temperature', 'humidity', 'co2', 'light', 'sound'];
 
@@ -44,8 +61,6 @@ const SelectedDeviceScreen = ({ navigation }) => {
                 }
             } catch (error) {
                 console.error("Error al cargar datos del dispositivo:", error);
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -89,6 +104,73 @@ const SelectedDeviceScreen = ({ navigation }) => {
         if (date) setEndDate(date);
     }, []);
 
+    const [chartData, setChartData] = useState(null);
+
+    useEffect(() => {
+        const fetchHistoricalData = async () => {
+            if (!selectedSensor || !startDate || !endDate || !device._id) return;
+            try {
+                const start = new Date(startDate).toISOString();
+                const end = new Date(endDate).toISOString();
+                const response = await getAllSensorDataInRange(device._id, {
+                    start,
+                    end,
+                    sensorName: selectedSensor.sensorName,
+                });
+
+                const rawData = response.data?.[0]?.data ?? [];
+
+                if (rawData.length === 0) {
+                    setChartData(null);
+                    return;
+                }
+
+                const firstTimestamp = new Date(rawData[0].time);
+                if (startDate < firstTimestamp) {
+                    setStartDate(firstTimestamp);
+                    return;
+                }
+
+                const totalPoints = 7;
+                const step = Math.floor(rawData.length / totalPoints);
+                const sampledData = [];
+
+                for (let i = 0; i < totalPoints; i++) {
+                    const index = i * step;
+                    if (rawData[index]) {
+                        sampledData.push(rawData[index]);
+                    }
+                }
+
+                const formatted = sampledData.map(item => ({
+                    label: new Date(item.time).toLocaleString("es-ES", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    }),
+                    value: item.value
+                }));
+
+                setChartData({
+                    labels: formatted.map(d => d.label),
+                    datasets: [{
+                        data: formatted.map(d => d.value),
+                        color: (opacity = 1) => SENSOR_COLORS[selectedSensor.sensorName] ?? '#000000',
+                    }],
+                    yAxisMin: 0,
+                });
+            } catch (error) {
+                console.error("Error al cargar datos históricos:", error);
+                setChartData(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchHistoricalData();
+    }, [selectedSensor, startDate, endDate, device._id]);
+
     return (
         <View className="flex-1">
             <Image
@@ -127,6 +209,7 @@ const SelectedDeviceScreen = ({ navigation }) => {
                                 />
                             </TouchableOpacity>
                         ))}
+                        <View className="w-8"></View>
                     </ScrollView>
 
                     <View className="p-4 flex-row">
@@ -192,13 +275,40 @@ const SelectedDeviceScreen = ({ navigation }) => {
 
                     <View className="px-4 mb-4 mt-8">
                         <Text className="text-xl font-bold mb-2">{getSensorDisplayName(selectedSensor.sensorName)}</Text>
-                        {/* Gráfica del sensor seleccionado */}
-                        <SensorChartScreen
-                            deviceId={device._id}
-                            sensor={selectedSensor}
-                            startDate={startDate}
-                            endDate={endDate}
-                            setStartDate={setStartDate}/>
+                        {/* Gráfica directamente aquí */}
+
+                        {chartData && chartData.datasets[0].data.length > 0 ? (
+                            <LineChart
+                                data={chartData}
+                                height={220}
+                                yAxisSuffix={SENSOR_UNITS[selectedSensor.sensorName] ?? '°C'}
+                                width={Dimensions.get("window").width - 32}
+                                bezier
+                                chartConfig={{
+                                    backgroundColor: "#ffffff",
+                                    backgroundGradientFrom: "#f0f4f8",
+                                    backgroundGradientTo: "#d9e2ec",
+                                    decimalPlaces: 1,
+                                    color: (opacity = 1) => `rgba(34, 94, 168, ${opacity})`,
+                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    style: { borderRadius: 16 },
+                                    propsForDots: {
+                                        r: "3",
+                                        strokeWidth: "1",
+                                        stroke: "#000000",
+                                    },
+                                    propsForLabels: {
+                                        fontSize: 9,
+                                    },
+                                    yAxisMin: 0,
+                                }}
+                                style={{ borderRadius: 16 }}
+                            />
+                        ) : (
+                            <View className="items-center justify-center mt-8">
+                                <Text className="text-gray-500">No hay datos disponibles en este rango.</Text>
+                            </View>
+                        )}
                     </View>
                 </>
                 )}

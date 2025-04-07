@@ -1,14 +1,13 @@
-import {useContext, useState} from "react";
 import {Image, Text, TextInput, TouchableOpacity, View} from "react-native";
-import {AuthContext} from "../context/AuthContext";
 import Header from "../components/Header";
+import {useContext, useState} from "react";
+import {AuthContext} from "../context/AuthContext";
 
 const RecoverAccount = ( {navigation} ) => {
-  const { login } = useContext(AuthContext);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+    const { handleRecoverPassword } = useContext(AuthContext);
+    const [user, setUser] = useState("");
 
-  return (
+    return (
     <View className="flex-1">
 
         <Image
@@ -27,17 +26,15 @@ const RecoverAccount = ( {navigation} ) => {
         placeholder="Correo electrónico"
         placeholderTextColor="#606266"
         autoCapitalize="none"
-        onChangeText={(text) => setUsername(text.trim().toLowerCase())}
+        onChangeText={(text) => setUser(text.trim().toLowerCase())}
       />
       <Text className="w-4/5 text-right text-sm text-primary underline mb-4" onPress={() => navigation.navigate("Login")}>
         Ya tienes una cuenta?
       </Text>
 
       <TouchableOpacity
-				className="bg-action-primary rounded-lg px-8 border-lines"
-				style={{ borderWidth: 1.3, paddingVertical: 5, width: "80%" }}
-				onPress={() => navigation.replace("CodeVerification")}
-			>
+          className="bg-action-primary rounded-lg px-8 border border-action-hover py-1 w-[80%]"
+          onPress={() => handleRecoverPassword(user)}>
 				<Text className="text-primary text-lg text-center">Enviar Código</Text>
 
 			</TouchableOpacity>

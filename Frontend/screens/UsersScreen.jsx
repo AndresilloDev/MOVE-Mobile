@@ -97,7 +97,7 @@ const UsersScreen = () => {
     };
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-gray-100">
             <Image
                 source={require("../assets/bg.png")}
                 className="absolute top-0 left-0 w-full h-full"
@@ -107,12 +107,11 @@ const UsersScreen = () => {
 
             <Header navigation={navigation} />
 
+            {/* Breadcrumb Navigation */}
             <View className="m-4 ml-6 flex-row items-center">
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="home" size={25} color="#000" />
-                </TouchableOpacity>
-                <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
-                <Text className="mr-2 text-xl">Administradores</Text>
+                <Icon name="home" size={25} color="#000" className="mr-2" />
+                <Icon name="chevron-forward-sharp" size={25} color="#000" className="mr-2" />
+                <Text className="text-xl">Administradores</Text>
             </View>
 
             {/* Search Bar */}

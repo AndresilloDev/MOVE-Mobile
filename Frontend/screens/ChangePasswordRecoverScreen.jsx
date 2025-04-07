@@ -9,16 +9,14 @@ const ChangePasswordRecoverScreen = ({navigation}) => {
     const { login } = useContext(AuthContext);
 
     return (
-        <View className="flex-1">
+        <View className="flex-1 bg-gray-100">
+            <Image
+                source={require("../assets/bg.png")}
+                className="absolute top-0 left-0 w-full h-full"
+                style={{ width: "600%", height: "100%" }}
+                resizeMode="cover"/>
 
-        <Image
-            source={require("../assets/bg.png")} 
-            className="absolute top-0 left-0 w-fill h-full" 
-            style={{ width: "600%", height: "100%"}}
-            resizeMode="cover" 
-      	/>
-
-        <Header navigation={navigation} />
+            <Header navigation={navigation} />
             
             <View className="mt-60 justify-center items-center p-4 rounded-lg">
                 <Text className="text-xl font-bold mb-6 text-center text-black">Confirmar tu cuenta</Text>

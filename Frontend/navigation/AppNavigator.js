@@ -13,17 +13,26 @@ const MainNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
+      <Stack.Navigator>
         {user ? (
             <>
-                <Stack.Screen name="User" component={BottomTabNavigator} />
-                <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Stack.Screen
+                    name="User"
+                    component={BottomTabNavigator}
+                    options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
+                    options={{ headerShown: false }}
+                />
             </>
             ) : (
-          <Stack.Screen name="NoUser" component={StackNavigatorHome} />
+          <Stack.Screen
+              name="NoUser"
+              component={StackNavigatorHome}
+              options={{ headerShown: false }}
+          />
         )}
       </Stack.Navigator>
     </NavigationContainer>

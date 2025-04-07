@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import { ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View, StyleSheet } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import {useRoute, useNavigation, useFocusEffect} from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { fileNotification, getNotification } from "../api/notifications.api";
 import { useNotification } from "../context/NotificationContext";
@@ -8,6 +8,7 @@ import Header from "../components/Header";
 import { getBuilding } from "../api/buildings.api";
 import { getSpace } from "../api/spaces.api";
 import { getDevice } from "../api/devices.api";
+import Loader from "../components/Loader";
 
 const SelectedNotificationScreen = () => {
   const route = useRoute();
@@ -85,20 +86,15 @@ const SelectedNotificationScreen = () => {
       try {
         setLoading(true);
         
-        // 1. Obtener la notificación
-        console.log("Obteniendo notificación con ID:", id);
         const notificationResponse = await getNotification(id);
         const notificationData = notificationResponse.data;
-        console.log("Datos de notificación:", notificationData);
         setNotification(notificationData);
         
         // 2. Obtener building
         const buildingId = extractId(notificationData.building);
-        console.log("Building ID:", buildingId);
         if (buildingId) {
           try {
             const buildingResponse = await getBuilding(buildingId);
-            console.log("Respuesta de edificio:", buildingResponse.data);
             setBuilding(buildingResponse.data || { name: "Desconocido" });
           } catch (error) {
             console.error("Error al obtener edificio:", error);
@@ -110,13 +106,9 @@ const SelectedNotificationScreen = () => {
         
         // 3. Obtener space
         const spaceId = extractId(notificationData.space);
-        console.log("Space ID:", spaceId);
         if (buildingId && spaceId) {
           try {
-            console.log(`Llamando a getSpace con buildingId: ${buildingId} y spaceId: ${spaceId}`);
             const spaceResponse = await getSpace(buildingId, spaceId);
-            console.log("Respuesta de espacio:", spaceResponse);
-            
             // Manejar diferentes estructuras de respuesta
             const spaceData = spaceResponse.data || spaceResponse;
             if (spaceData && typeof spaceData === 'object') {
@@ -134,13 +126,9 @@ const SelectedNotificationScreen = () => {
         
         // 4. Obtener device
         const deviceId = extractId(notificationData.device);
-        console.log("Device ID:", deviceId);
         if (deviceId) {
           try {
-            console.log(`Llamando a getDevice con deviceId: ${deviceId}`);
             const deviceResponse = await getDevice(deviceId);
-            console.log("Respuesta de dispositivo:", deviceResponse);
-            
             // Manejar diferentes estructuras de respuesta
             const deviceData = deviceResponse.data || deviceResponse;
             if (deviceData && typeof deviceData === 'object') {
@@ -166,223 +154,126 @@ const SelectedNotificationScreen = () => {
 
     fetchNotificationDetails();
   }, [id]);
-  
-  if (loading || !notification) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4A90E2" />
-        <Text style={styles.loadingText}>Cargando notificación...</Text>
-      </View>
-    );
-  }
-  
+
   return (
-    <View style={styles.container}>
-      <Header navigation={navigation} />
-      
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Main title */}
-        <Text style={styles.title}>{notification.sensor}</Text>
-        
-        {/* Info cards */}
-        <View style={styles.card}>
-          <View style={styles.infoRow}>
-            <Icon name="hardware-chip" size={20} color="#666" style={styles.icon} />
-            <View>
-              <Text style={styles.label}>Dispositivo</Text>
-              <Text style={styles.value}>{device.name}</Text>
-            </View>
-          </View>
-          
-          <View style={styles.infoRow}>
-            <Icon name="document-text" size={20} color="#666" style={styles.icon} />
-            <View>
-              <Text style={styles.label}>Nombre</Text>
-              <Text style={styles.value}>{notification.name}</Text>
-            </View>
-          </View>
-          
-          <View style={styles.divider} />
-          
-          <View style={styles.infoRow}>
-            <Icon name="business" size={20} color="#666" style={styles.icon} />
-            <View>
-              <Text style={styles.label}>Edificio</Text>
-              <Text style={styles.value}>{building.name}</Text>
-            </View>
-          </View>
-          
-          <View style={styles.infoRow}>
-            <Icon name="home" size={20} color="#666" style={styles.icon} />
-            <View>
-              <Text style={styles.label}>Aula</Text>
-              <Text style={styles.value}>{space.name}</Text>
-            </View>
-          </View>
+      <View className="flex-1 bg-gray-100">
+        <Image
+            source={require("../assets/bg.png")}
+            className="absolute top-0 left-0 w-full h-full"
+            style={{ width: "600%", height: "100%" }}
+            resizeMode="cover"
+        />
+
+        <Header navigation={navigation} />
+
+        {(loading || !notification) ? (
+            <Loader />
+        ) : (
+            <>
+
+        {/* Breadcrumb Navigation */}
+        <View className="m-4 ml-6 flex-row items-center">
+          <Icon name="home" size={25} color="#000" className="mr-2" />
+          <Icon name="chevron-forward-sharp" size={25} color="#000" className="mr-2" />
+          <Text className="text-xl">{notification.sensor}</Text>
         </View>
-        
-        {/* Sensor data card */}
-        <View style={[styles.card, styles.sensorCard]}>
-          <Text style={styles.sensorTitle}>Datos del sensor</Text>
-          
-          <View style={styles.sensorDataRow}>
-            <View>
-              <Text style={styles.label}>Valor medido</Text>
-              <Text style={[styles.value, styles.sensorValue]}>{getFormattedValue()}</Text>
-            </View>
-            
-            <View style={styles.dateContainer}>
-              <Text style={styles.label}>Fecha</Text>
-              <Text style={styles.value}>{getDate()}</Text>
+
+
+
+        <ScrollView className="px-4 pb-8">
+
+          {/* Info cards */}
+          <View className="bg-white rounded-xl p-4 shadow-lg mb-6">
+            <View className="flex-row space-x-4 my-3">
+              {/* Primera sección: alineada a la izquierda y centrada */}
+              <View className="flex-1 justify-center items-center">
+                <View className="flex-row items-center mb-3">
+                  <Icon name="hardware-chip" size={20} color="#666" className="mr-3" />
+                  <View>
+                    <Text className="text-sm text-gray-600 mb-1">Dispositivo</Text>
+                    <Text className="text-base font-medium text-gray-800">{device.name}</Text>
+                  </View>
+                </View>
+
+                <View className="flex-row items-center mb-3">
+                  <Icon name="document-text" size={20} color="#666" className="mr-3" />
+                  <View>
+                    <Text className="text-sm text-gray-600 mb-1">Nombre</Text>
+                    <Text className="text-base font-medium text-gray-800">{notification.name}</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View className="w-px bg-gray-300 mx-3" />
+
+              {/* Segunda sección: alineada a la derecha y centrada */}
+              <View className="flex-1 justify-center items-center">
+                <View className="flex-row items-center mb-3">
+                  <Icon name="business" size={20} color="#666" className="mr-3" />
+                  <View>
+                    <Text className="text-sm text-gray-600 mb-1">Edificio</Text>
+                    <Text className="text-base font-medium text-gray-800">{building.name}</Text>
+                  </View>
+                </View>
+
+                <View className="flex-row items-center mb-3">
+                  <Icon name="home" size={20} color="#666" className="mr-3" />
+                  <View>
+                    <Text className="text-sm text-gray-600 mb-1">Aula</Text>
+                    <Text className="text-base font-medium text-gray-800">{space.name}</Text>
+                  </View>
+                </View>
+              </View>
             </View>
           </View>
-          
-          {notification.image && (
-            <View style={styles.imageContainer}>
-              <Image 
-                source={{ 
-                  uri: notification.image.startsWith('data:image') 
-                    ? notification.image 
-                    : `data:image/jpeg;base64,${notification.image}`
-                }}
-                style={styles.image}
-                resizeMode="contain"
-              />
+
+
+          {/* Sensor data card */}
+          <View className="bg-white rounded-xl p-4 shadow-lg mb-6">
+            <Text className="text-lg font-semibold text-gray-800 mb-4">Datos del sensor</Text>
+
+            <View className="flex-row justify-between mb-4">
+              <View>
+                <Text className="text-sm text-gray-600 mb-1">Valor medido</Text>
+                <Text className="text-base font-medium text-blue-600">{getFormattedValue()}</Text>
+              </View>
+
+              <View className="items-end">
+                <Text className="text-sm text-gray-600 mb-1">Fecha</Text>
+                <Text className="text-base font-medium text-gray-800">{getDate()}</Text>
+              </View>
             </View>
+
+            {notification.image && (
+                <View className="mt-4 rounded-lg overflow-hidden bg-gray-200">
+                  <Image
+                      source={{
+                        uri: notification.image.startsWith('data:image')
+                            ? notification.image
+                            : `data:image/jpeg;base64,${notification.image}`
+                      }}
+                      className="w-full h-64"
+                      resizeMode="contain"
+                  />
+                </View>
+            )}
+          </View>
+
+          {/* Resolve button */}
+          {notification.status && (
+              <TouchableOpacity
+                  className="bg-action-primary py-3 rounded-xl flex-[1.2] items-center border border-action-hover"
+                  onPress={handleFileNotification}
+              >
+                <Text className="text-primary text-lg text-center font-semibold">Marcar como resuelta</Text>
+              </TouchableOpacity>
           )}
-        </View>
-        
-        {/* Resolve button */}
-        {notification.status && (
-          <TouchableOpacity 
-            style={styles.resolveButton}
-            onPress={handleFileNotification}
-          >
-            <Text style={styles.resolveButtonText}>Marcar como resuelta</Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
-    </View>
+        </ScrollView>
+            </>
+
+            )}
+      </View>
   );
 };
-
-// Estilos (se mantienen igual que en tu código original)
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F7FA',
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-  },
-  loadingText: {
-    marginTop: 16,
-    color: '#666',
-    fontSize: 16,
-  },
-  scrollContainer: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  backText: {
-    marginLeft: 8,
-    color: '#4A90E2',
-    fontSize: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 24,
-  },
-  card: {
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  sensorCard: {
-    marginBottom: 24,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  icon: {
-    marginRight: 12,
-    width: 24,
-    textAlign: 'center',
-  },
-  label: {
-    color: '#666',
-    fontSize: 14,
-    marginBottom: 2,
-  },
-  value: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: '#EEE',
-    marginVertical: 12,
-  },
-  sensorTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 16,
-  },
-  sensorDataRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  sensorValue: {
-    fontSize: 18,
-    color: '#4A90E2',
-  },
-  dateContainer: {
-    alignItems: 'flex-end',
-  },
-  imageContainer: {
-    marginTop: 16,
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: '#EEE',
-  },
-  image: {
-    width: '100%',
-    height: 250,
-  },
-  resolveButton: {
-    backgroundColor: '#4A90E2',
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 8,
-  },
-  resolveButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default SelectedNotificationScreen;

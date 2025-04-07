@@ -1,12 +1,13 @@
 import React, {useContext, useRef, useState} from "react";
-import {Image, Platform, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Image, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {useNotification} from "../context/NotificationContext";
 import {AuthContext} from "../context/AuthContext";
+import Header from "../components/Header";
 
 const ProfileScreen = () => {
-    const { user, updateProfile, handleLogout } = useContext(AuthContext);
+    const { user, updateProfile } = useContext(AuthContext);
     const [name, setName] = useState(user?.name || "");
     const [lastName, setLastName] = useState(user?.lastName || "");
     const { getSuccess, getError } = useNotification();
@@ -32,54 +33,16 @@ const ProfileScreen = () => {
         }
     };
 
-    const logout = async () => {
-        try {
-            await handleLogout();
-        } catch (error) {
-            getError("Error al cerrar sesión")
-        }
-    }
 
     return (
         <View className="flex-1 bg-gray-100">
-            {/* Fondo de la imagen */}
             <Image
                 source={require("../assets/bg.png")}
                 className="absolute top-0 left-0 w-full h-full"
                 style={{ width: "600%", height: "100%" }}
-                resizeMode="cover"
-            />
+                resizeMode="cover"/>
 
-            <View
-                className="bg-header flex-row items-center justify-between px-4 pt-12"
-                style={{
-                    ...Platform.select({
-                        ios: {
-                            shadowColor: "#000",
-                            shadowOffset: { width: 0, height: 4 },
-                            shadowOpacity: 0.1,
-                            shadowRadius: 4,
-                        },
-                        android: {
-                            elevation: 5,
-                        },
-                    }),
-                }}
-            >
-                <View className="flex-row justify-between items-center flex-1">
-                    <Image
-                        source={require("../assets/logo.png")}
-                        className="w-32 h-10 ml-4 mb-2"
-                    />
-
-                    <TouchableOpacity
-                        className="bg-action-primary rounded-lg px-4 border border-action-hover justify-center py-1.5"
-                        onPress={() => logout()}
-                    >
-                        <Text className="text-primary text-center">Cerrar sesión</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <Header navigation={navigation} />
 
             {/* Breadcrumb Navigation */}
             <View className="m-4 ml-6 flex-row items-center">

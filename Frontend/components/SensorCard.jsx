@@ -67,7 +67,7 @@ const SemiCircularDial = ({
   );
 };
 
-const SensorCard = ({ sensor, isSelected }) => {
+const SensorCard = ({ sensor, isSelected, onConfig }) => {
   // Obtener el último valor del sensor
   const latestValue = sensor?.data?.[sensor?.data?.length - 1]?.value ?? 0;
 
@@ -186,14 +186,26 @@ const SensorCard = ({ sensor, isSelected }) => {
       <View className="flex-row justify-between items-center mb-2">
         <Text className="text-lg font-bold">{translatedName}</Text>
         <View className="flex-row gap-2">
-          <TouchableOpacity>
+          <TouchableOpacity
+              className="p-2 rounded-full active:bg-gray-200"
+              accessibilityLabel="Notificaciones"
+              onPress={() => navigation.navigate('Notifications', { deviceId: device.id, sensorType: sensor.sensorName })}
+          >
             <Image
                 source={NotificationIcon}
                 className="w-6 h-6"
             />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Image source={SettingIcon} className="w-6 h-6" />
+
+          <TouchableOpacity
+              className="p-2 rounded-full active:bg-gray-200"
+              accessibilityLabel="Configuración"
+              onPress={() => onConfig({ open: true, sensor })}
+          >
+            <Image
+                source={SettingIcon}
+                className="w-6 h-6"
+            />
           </TouchableOpacity>
         </View>
       </View>

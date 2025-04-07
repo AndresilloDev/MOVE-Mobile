@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import {
-    SafeAreaView,
     StyleSheet,
     Text, TextInput,
     TouchableOpacity,
@@ -35,7 +34,8 @@ const AddDeviceScreen = () => {
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <>
+
             <View style={styles.heartRateTitleWrapper}>
                 {connectedDevice ? (
                     <>
@@ -84,7 +84,7 @@ const AddDeviceScreen = () => {
                 connectToPeripheral={connectToDevice}
                 devices={allDevices}
             />
-        </SafeAreaView>
+        </>
     );
 };
 

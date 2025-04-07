@@ -1,17 +1,17 @@
 import {Image, Text, View} from "react-native";
 import Header from "../components/Header";
+import React from "react";
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <View className="flex-1 bg-white">
-        <Image
-            source={require("../assets/bg.png")} 
-            className="absolute top-0 left-0 w-fill h-full" 
-            style={{ width: "600%", height: "100%"}}
-            resizeMode="cover" 
-        />
+      <View className="flex-1 bg-gray-100">
+          <Image
+              source={require("../assets/bg.png")}
+              className="absolute top-0 left-0 w-full h-full"
+              style={{ width: "600%", height: "100%" }}
+              resizeMode="cover"/>
 
-        <Header navigation={navigation} />
+          <Header navigation={navigation} />
 
         <View className="mt-16 justify-center items-center px-6">
 

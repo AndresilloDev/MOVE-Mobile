@@ -1,10 +1,11 @@
-import {View} from "react-native";
+import {View, Text, ActivityIndicator} from "react-native";
 import React from "react";
 
 const Loader = () => (
-    <View className="flex-1 inset-0 flex justify-center items-center">
-        <View className="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+    <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#4A90E2" />
+        <Text className="mt-4 text-gray-500 text-base">Cargando...</Text>
     </View>
-)
+);
 
 export default Loader;

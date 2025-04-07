@@ -15,7 +15,7 @@ export default function BottomTabNavigator() {
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
             <Tab.Screen
-                name="DevicesTab"
+                name="Devices"
                 component={StackNavigatorDevices}
                 options={{
                     tabBarIcon: () => (
@@ -24,7 +24,7 @@ export default function BottomTabNavigator() {
                 }}
             />
             <Tab.Screen
-                name="BuildingsTab"
+                name="Buildings"
                 component={StackNavigatorBuildings}
                 options={{
                     tabBarIcon: () => (
@@ -32,9 +32,18 @@ export default function BottomTabNavigator() {
                     ),
                 }}
             />
+            <Tab.Screen
+                name="Notifications"
+                component={StackNavigatorNotifications}
+                options={{
+                    tabBarIcon: () => (
+                        <Image source={require("../assets/icons/notificacion.png")} className="w-8 h-8" />
+                    ),
+                }}
+            />
             { user?.isAdmin && (
                 <Tab.Screen
-                    name="AdminsTab"
+                    name="Admins"
                     component={StackNavigatorUsers}
                     options={{
                         tabBarIcon: () => (
@@ -43,15 +52,6 @@ export default function BottomTabNavigator() {
                     }}
                 />
             )}
-            <Tab.Screen
-                name="NotificationsTab"
-                component={StackNavigatorNotifications}
-                options={{
-                    tabBarIcon: () => (
-                        <Image source={require("../assets/icons/notificacion.png")} className="w-8 h-8" />
-                    ),
-                }}
-            />
         </Tab.Navigator>
     );
 }
