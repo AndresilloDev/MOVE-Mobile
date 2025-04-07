@@ -13,6 +13,9 @@ export const AuthProvider = ({ children }) => {
     const navigationRef = useNavigationContainerRef();
 
     /*
+
+     */
+
     useEffect(() => {
         const loadUserData = async () => {
             try {
@@ -28,12 +31,9 @@ export const AuthProvider = ({ children }) => {
         loadUserData();
     }, []);
 
-     */
-
 
     /*
 
-     */
     useEffect(() => {
         const validateToken = async () => {
             try {
@@ -48,6 +48,9 @@ export const AuthProvider = ({ children }) => {
 
         return navigationRef.addListener("state", validateToken);
     }, [navigationRef]);
+
+     */
+
 
     const handleLogin = async (user, password) => {
         if (!user || !password) {
