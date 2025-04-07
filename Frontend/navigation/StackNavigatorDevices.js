@@ -3,7 +3,6 @@ import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import SelectedDeviceScreen from "../screens/SelectedDeviceScreen";
 import AddDeviceScreen from "../screens/addScreens/AddDeviceScreen";
 import DevicesScreen from "../screens/DevicesScreen";
-import ConnectDeviceScreen from "../screens/ConnectDeviceScreen";
 import EditDeviceScreen from "../screens/editScreens/EditDeviceScreen";
 import DeleteDeviceScreen from "../screens/deleteScreens/DeleteDeviceScreen";
 
@@ -30,11 +29,6 @@ export default function StackNavigatorDevices() {
             <Stack.Screen
                 name="DeleteDevice"
                 component={DeleteDeviceScreen}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name="ConnectDevice"
-                component={ConnectDeviceScreen}
                 options={{ headerShown: false }}
             />
             <Stack.Screen

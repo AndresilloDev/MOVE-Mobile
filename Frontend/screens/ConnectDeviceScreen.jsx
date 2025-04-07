@@ -1,28 +1,42 @@
-import React, {useCallback} from "react";
-import {FlatList, Image, SafeAreaView, Text, TouchableOpacity, View,} from "react-native";
-import Header from "../components/Header";
-import Icon from "react-native-vector-icons/Ionicons";
+import React, { useCallback } from "react";
+import {
+    FlatList,
+    Modal,
+    Text,
+    TouchableOpacity,
+    View,
+    Image,
+} from "react-native";
 
-const DeviceListItem = ({ item, connectToPeripheral, navigation }) => {
-    const connect = useCallback(() => {
+const DeviceModalListItem = ({ item, connectToPeripheral, closeModal }) => {
+    const connectAndCloseModal = useCallback(() => {
         connectToPeripheral(item);
-        navigation.goBack();
-    }, [connectToPeripheral, item, navigation]);
+        closeModal();
+    }, [closeModal, connectToPeripheral, item]);
 
     return (
-        <TouchableOpacity onPress={connect} className="bg-red-500 justify-center items-center h-12 w-full mb-2 rounded-lg">
-            <Text className="text-lg font-bold text-white">{item.name || "Unknown Device"}</Text>
+        <TouchableOpacity
+            onPress={connectAndCloseModal}
+            className="bg-action-primary px-4 py-4 rounded-2xl mb-4 w-full items-center border border-action-hover"
+        >
+            <Text className="text-primary text-lg font-semibold">
+                {item.name || "Unknown Device"}
+            </Text>
         </TouchableOpacity>
     );
 };
 
-const ConnectDeviceScreen = ({ devices = [], connectToPeripheral, navigation }) => {
-    const renderDeviceListItem = ({ item }) => (
-        <DeviceListItem item={item} connectToPeripheral={connectToPeripheral} navigation={navigation} />
+const ConnectDeviceScreen = ({ devices = [], visible, connectToPeripheral, closeModal }) => {
+    const renderDeviceModalListItem = ({ item }) => (
+        <DeviceModalListItem
+            item={item}
+            connectToPeripheral={connectToPeripheral}
+            closeModal={closeModal}
+        />
     );
 
     return (
-        <View className="flex-1">
+        <Modal animationType="slide" transparent={false} visible={visible}>
             <Image
                 source={require("../assets/bg.png")}
                 className="absolute top-0 left-0 w-full h-full"
@@ -30,31 +44,35 @@ const ConnectDeviceScreen = ({ devices = [], connectToPeripheral, navigation }) 
                 resizeMode="cover"
             />
 
-            <Header navigation={navigation} />
+            <View className="flex-1 items-center justify-center">
+                <View className="w-[70%] items-center">
+                    <Text className="text-2xl font-bold text-center text-black mb-10">
+                        Conéctate a un dispositivo
+                    </Text>
 
-            <View className="m-4 ml-6 flex-row items-center">
-                <Icon className="mr-2" name="home" size={25} color="#000" />
-                <Icon className="mr-2" name="chevron-forward-sharp" size={25} color="#000" />
-                <Text className="text-xl">Conectar Dispositivo</Text>
+                    {devices.length > 0 ? (
+                        <FlatList
+                            className="w-full"
+                            contentContainerStyle={{ paddingBottom: 20 }}
+                            data={devices}
+                            keyExtractor={(item) => item.id}
+                            renderItem={renderDeviceModalListItem}
+                        />
+                    ) : (
+                        <View className="items-center justify-center py-10">
+                            <Text className="text-gray-500 text-base">No se encontraron dispositivos</Text>
+                        </View>
+                    )}
+
+                    <TouchableOpacity
+                        onPress={closeModal}
+                        className="mt-4 py-3 px-6 rounded-xl border border-black w-full items-center"
+                    >
+                        <Text className="text-primary text-lg font-semibold">Cerrar</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-
-            <SafeAreaView className="flex-1 items-center justify-center p-5">
-                {devices.length > 0 ? (
-                    <FlatList
-                        data={devices}
-                        keyExtractor={(item) => item.id}
-                        renderItem={renderDeviceListItem}
-                    />
-                ) : (
-                    <View className="flex items-center justify-center p-5">
-                        <Text className="text-lg text-gray-500">No devices found</Text>
-                    </View>
-                )}
-            </SafeAreaView>
-            <TouchableOpacity onPress={() => navigation.goBack()} className="bg-action-primary rounded-lg px-8 border-lines p-2 m-8 self-center">
-                <Text className="text-primary text-lg text-center font-bold">Regresar</Text>
-            </TouchableOpacity>
-        </View>
+        </Modal>
     );
 };
 

@@ -111,7 +111,7 @@ const DevicesScreen = () => {
 
                 <TouchableOpacity
                     className="absolute bottom-5 right-5 bg-[rgba(222,255,53,0.8)] w-12 h-12 rounded-full items-center justify-center shadow-sm shadow-black"
-                    onPress={() => navigation.navigate("ConnectDevice")}>
+                    onPress={() => navigation.navigate("AddDevice")}>
                     <Icon name="add" size={30} color="#000" />
                 </TouchableOpacity>
             </>

@@ -75,7 +75,6 @@ function useBLE() {
             }
 
             if (device && (device.localName) && device.isConnectable === true) {
-                console.log(device);
                 setAllDevices((prevState) => {
                     if (!isDuplicateDevice(prevState, device)) {
                         return [...prevState, device];
@@ -139,6 +138,16 @@ function useBLE() {
         }
     };
 
+    const checkIfDeviceIsConnected = async (deviceId) => {
+        try {
+            const device = await bleManager.connectedDevices([SERVICE_UUID]);
+            return device?.some(d => d.id === deviceId) ?? false;
+        } catch (error) {
+            console.warn("Error al verificar conexión Bluetooth:", error);
+            return false;
+        }
+    };
+
     return {
         scanForPeripherals,
         requestPermissions,
@@ -146,7 +155,8 @@ function useBLE() {
         connectToDevice,
         connectedDevice,
         disconnectFromDevice,
-        sendWifiCredentials
+        sendWifiCredentials,
+        checkIfDeviceIsConnected
     };
 }
 
